@@ -38,3 +38,26 @@ App Switcher background in media/demo_problem_v5.mp4:
   The previous night-sky mountain still (Pexels, archived as
   assets/img/wall-night.jpg) is no longer used in the live demo.
 
+Third-party brand icons in assets/img/brand/
+--------------------------------------------
+Official, unaltered icons used only as nominative source labels on the
+preview landing-page funnel graphic. See assets/img/brand/README.md for
+the exact official download URL and filename of each file.
+
+  TikTok   Official Logo Pack linked from
+           https://developers.tiktok.com/doc/getting-started-design-guidelines/
+           (logo-pack.zip, TikTok_Icon_Black_Square.png). Retrieved 15 Nov 2026.
+
+  Instagram Official glyph SVGs from Meta Brand Resource Center
+           https://www.meta.com/brand/resources/instagram/instagram-brand/
+           (IG_brand_asset_pack_2023.zip). Retrieved 15 Nov 2026.
+
+  YouTube  Official product logo SVG from YouTube Brand Resources /
+           Google product logos
+           https://www.youtube.com/howyoutubeworks/resources/brand-resources/
+           https://www.gstatic.com/images/branding/productlogos/youtube/v9/192px.svg
+           Retrieved 15 Nov 2026. Used to label YouTube Shorts; a separate
+           official Shorts mark was not published for download on that date.
+
+TikTok, Instagram and YouTube are trademarks of their respective owners.
+SeeLater is not affiliated with them.
