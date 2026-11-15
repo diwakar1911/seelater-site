@@ -1,4 +1,6 @@
-/* Start and loop the two hero phone videos together. */
+/* Play the Before/After phone videos together only once #before-after
+   is in view. First entry restarts from 0; leaving pauses; returning
+   resumes in sync. No autoplay before that. */
 (function () {
   "use strict";
 
@@ -7,10 +9,21 @@
   );
   if (videos.length < 2) return;
 
+  var section = document.getElementById("before-after") ||
+    (videos[0] && videos[0].closest(".compare-demo, section"));
+
   var ready = false;
   var cycling = false;
   var startedAt = 0;
+  var hasPlayed = false;
+  var visible = false;
   var loops = [];
+  var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var THRESHOLD = 0.45;
+
+  function prefersReduced() {
+    return reducedMq.matches;
+  }
 
   function prepare(v) {
     v.loop = false;
@@ -21,7 +34,8 @@
     v.setAttribute("playsinline", "");
     v.setAttribute("webkit-playsinline", "");
     v.setAttribute("muted", "");
-    v.setAttribute("autoplay", "");
+    v.removeAttribute("autoplay");
+    v.autoplay = false;
     v.preload = "auto";
     try { v.pause(); } catch (e) {}
   }
@@ -58,6 +72,7 @@
   }
 
   function playBoth() {
+    if (prefersReduced() || !visible) return Promise.resolve();
     return Promise.all(
       videos.map(function (v) {
         var play = v.play();
@@ -66,18 +81,30 @@
     );
   }
 
+  function pauseBoth() {
+    videos.forEach(function (v) {
+      try { v.pause(); } catch (e) {}
+    });
+  }
+
   function startTogether() {
-    if (ready) return;
+    if (ready || hasPlayed) return;
+    if (prefersReduced() || !visible) return;
     if (!videos.every(function (v) { return v.readyState >= 3; })) return;
     ready = true;
     seekToZero().then(function () {
+      if (!visible || prefersReduced()) {
+        ready = false;
+        return;
+      }
+      hasPlayed = true;
       startedAt = performance.now();
       return playBoth();
     });
   }
 
   function restartTogether(reason) {
-    if (!ready || cycling) return;
+    if (!ready || cycling || !visible || prefersReduced()) return;
     cycling = true;
     var wall = performance.now();
     var before = videos.map(function (v) {
@@ -85,6 +112,10 @@
     });
     seekToZero()
       .then(function () {
+        if (!visible || prefersReduced()) {
+          cycling = false;
+          return;
+        }
         var afterSeek = videos.map(function (v) { return v.currentTime; });
         return playBoth().then(function () {
           loops.push({
@@ -103,17 +134,38 @@
       });
   }
 
+  function onVisibility(isVisible) {
+    visible = isVisible;
+    if (prefersReduced()) {
+      pauseBoth();
+      return;
+    }
+    if (isVisible) {
+      if (!hasPlayed) {
+        startTogether();
+      } else {
+        playBoth();
+      }
+    } else {
+      pauseBoth();
+    }
+  }
+
   videos.forEach(function (v) {
     v.addEventListener("ended", function () { restartTogether("ended"); });
     v.addEventListener("timeupdate", function () {
-      if (!ready || cycling) return;
+      if (!ready || cycling || !visible || prefersReduced()) return;
       var dur = v.duration;
       if (dur && isFinite(dur) && dur > 0 && v.currentTime >= dur - 0.04) {
         restartTogether("timeupdate");
       }
     });
-    v.addEventListener("canplaythrough", startTogether);
-    v.addEventListener("loadeddata", startTogether);
+    v.addEventListener("canplaythrough", function () {
+      if (visible && !hasPlayed) startTogether();
+    });
+    v.addEventListener("loadeddata", function () {
+      if (visible && !hasPlayed) startTogether();
+    });
   });
 
   /* Load via blob so seek-to-0 works even when the server has no Range support. */
@@ -139,18 +191,52 @@
         .catch(function () {});
     })
   ).then(function () {
-    startTogether();
+    if (visible && !hasPlayed) startTogether();
   });
+
+  if (section && "IntersectionObserver" in window) {
+    var io = new IntersectionObserver(
+      function (entries) {
+        var entry = entries[0];
+        var ratio = entry && entry.isIntersecting ? entry.intersectionRatio : 0;
+        onVisibility(ratio >= THRESHOLD);
+      },
+      { threshold: [0, 0.25, 0.4, 0.45, 0.5, 0.75, 1] }
+    );
+    io.observe(section);
+  } else if (section) {
+    /* Rare fallback: treat as visible only when already in view on load. */
+    var rect = section.getBoundingClientRect();
+    var vh = window.innerHeight || 0;
+    var visiblePx = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
+    onVisibility(vh > 0 && visiblePx / Math.max(rect.height, 1) >= THRESHOLD);
+  }
+
+  if (reducedMq.addEventListener) {
+    reducedMq.addEventListener("change", function () {
+      if (prefersReduced()) pauseBoth();
+      else if (visible) {
+        if (!hasPlayed) startTogether();
+        else playBoth();
+      }
+    });
+  }
 
   window.__heroSync = {
     videos: videos,
     loops: loops,
+    threshold: THRESHOLD,
+    visible: function () { return visible; },
+    hasPlayed: function () { return hasPlayed; },
     startedAt: function () { return startedAt; },
     snapshot: function () {
       return {
         ready: ready,
         cycling: cycling,
         startedAt: startedAt,
+        hasPlayed: hasPlayed,
+        visible: visible,
+        reduced: prefersReduced(),
         loopCount: loops.length,
         loops: loops,
         now: performance.now(),
@@ -161,7 +247,8 @@
             paused: v.paused,
             ended: v.ended,
             ready: v.readyState,
-            loop: v.loop
+            loop: v.loop,
+            autoplay: v.autoplay
           };
         })
       };

@@ -5,6 +5,7 @@
   if (!root) return;
 
   const visual = root.querySelector(".funnel-visual");
+  const stage = root.querySelector(".funnel-stage") || visual.parentElement;
   const svg = root.querySelector(".funnel-svg-live");
   const im = root.querySelector(".funnel-im");
   const phone = root.querySelector(".funnel-device .phone-bezel") || root.querySelector(".funnel-device");
@@ -44,22 +45,67 @@
     paths[src] = p;
   }
 
+  function visualScale() {
+    const bw = visual.getBoundingClientRect().width;
+    return visual.offsetWidth > 0 ? bw / visual.offsetWidth : 1;
+  }
+
   function box(el) {
     const a = el.getBoundingClientRect();
     const b = visual.getBoundingClientRect();
+    const s = visualScale() || 1;
     return {
-      left: a.left - b.left,
-      top: a.top - b.top,
-      width: a.width,
-      height: a.height,
-      right: a.right - b.left,
-      bottom: a.bottom - b.top,
-      cx: a.left + a.width / 2 - b.left,
-      cy: a.top + a.height / 2 - b.top,
+      left: (a.left - b.left) / s,
+      top: (a.top - b.top) / s,
+      width: a.width / s,
+      height: a.height / s,
+      right: (a.right - b.left) / s,
+      bottom: (a.bottom - b.top) / s,
+      cx: (a.left + a.width / 2 - b.left) / s,
+      cy: (a.top + a.height / 2 - b.top) / s,
     };
   }
 
+  function resetFit() {
+    visual.style.transform = "none";
+    visual.style.width = "";
+    if (stage && stage !== visual) stage.style.height = "";
+  }
+
+  function fit() {
+    if (!stage || stage === visual) return 1;
+    root.classList.remove("is-badge-below");
+    resetFit();
+    const available = stage.clientWidth;
+    visual.style.width = "max-content";
+    const natural = Math.ceil(visual.scrollWidth);
+    const scale = Math.max(0.35, Math.min(1, available / Math.max(natural, 1)));
+    root.style.setProperty("--funnel-scale", String(scale));
+    const h = visual.offsetHeight;
+    if (scale < 0.999) {
+      const leftover = available - natural * scale;
+      visual.style.transformOrigin = "top left";
+      visual.style.transform = "translateX(" + (leftover / 2) + "px) scale(" + scale + ")";
+      visual.style.width = natural + "px";
+      stage.style.height = Math.ceil(h * scale) + "px";
+    } else {
+      visual.style.width = "";
+      visual.style.transform = "none";
+      stage.style.height = "";
+    }
+    return scale;
+  }
+
+  let fitting = false;
+
   function layout() {
+    if (fitting) return;
+    fitting = true;
+    try {
+      fit();
+    } finally {
+      fitting = false;
+    }
     const w = visual.offsetWidth;
     const h = visual.offsetHeight;
     if (w < 10 || h < 10) return;
@@ -68,17 +114,11 @@
     svg.setAttribute("width", String(w));
     svg.setAttribute("height", String(h));
 
-    const stacked = w < 700;
     const imBox = box(im);
     const phoneBox = box(phone);
     if (reducedMq.matches) root.classList.add("is-reduced");
     else root.classList.remove("is-reduced");
 
-    const mid = {
-      tt: 0.22,
-      ig: 0.5,
-      yt: 0.78,
-    };
     const endFrac = { tt: 0.33, ig: 0.45, yt: 0.58 };
     const order = ["tt", "ig", "yt"];
     const cardBox = {};
@@ -89,44 +129,27 @@
       if (!card || !paths[src]) return;
       const c = box(card);
       cardBox[src] = c;
-      let d;
-      if (!stacked) {
-        const x1 = c.right - 1;
-        const y1 = c.cy;
-        const x2 = phoneBox.left - 2;
-        const y2 = phoneBox.top + phoneBox.height * endFrac[src];
-        const dx = Math.max(48, (x2 - x1) * 0.48);
-        d = "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2;
-      } else {
-        const x1 = imBox.left + imBox.width * mid[src];
-        const y1 = imBox.bottom + 2;
-        const x2 = phoneBox.cx;
-        const y2 = phoneBox.top - 2;
-        const midY = y1 + (y2 - y1) * 0.45;
-        d = "M " + x1 + " " + y1 + " C " + x1 + " " + midY + ", " + x2 + " " + midY + ", " + x2 + " " + y2;
-      }
+      const x1 = c.right - 1;
+      const y1 = c.cy;
+      const x2 = phoneBox.left - 2;
+      const y2 = phoneBox.top + phoneBox.height * endFrac[src];
+      const dx = Math.max(36, (x2 - x1) * 0.48);
+      const d = "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2;
       paths[src].setAttribute("d", d);
     });
 
     // Park the three chips in one vertical column on the paths, evenly spaced.
     // They do not travel. left/top is used so equal-sized pills share an x.
-    let colX;
-    let y0;
-    let yStep;
-    if (!stacked) {
-      colX = imBox.right + (phoneBox.left - imBox.right) / 2;
-      const ys = order.map((src) => (cardBox[src] || {}).cy).filter((y) => y != null);
-      const yTop = ys.length ? Math.min.apply(null, ys) : imBox.top;
-      const yBot = ys.length ? Math.max.apply(null, ys) : imBox.bottom;
-      y0 = yTop;
-      yStep = order.length > 1 ? (yBot - yTop) / (order.length - 1) : 0;
-    } else {
-      colX = w / 2;
-      const top = imBox.bottom + 22;
-      const bot = phoneBox.top - 22;
-      y0 = top;
-      yStep = order.length > 1 ? (bot - top) / (order.length - 1) : 0;
-    }
+    const midX = imBox.right + (phoneBox.left - imBox.right) / 2;
+    const chipW = (chips[0] && chips[0].offsetWidth) || 132;
+    // Keep the pills on the paths and off the phone's left edge.
+    const colX = Math.min(midX, phoneBox.left - chipW / 2 - 8);
+    const ys = order.map((src) => (cardBox[src] || {}).cy).filter((y) => y != null);
+    const yTop = ys.length ? Math.min.apply(null, ys) : imBox.top;
+    const yBotRaw = ys.length ? Math.max.apply(null, ys) : imBox.bottom;
+    const y0 = Math.max(yTop, phoneBox.top + 20);
+    const yBot = Math.min(yBotRaw, phoneBox.bottom - 20);
+    const yStep = order.length > 1 ? (Math.max(yBot, y0) - y0) / (order.length - 1) : 0;
 
     chips.forEach((chip) => {
       const src = chip.getAttribute("data-src");
@@ -140,9 +163,12 @@
   }
 
   window.__funnelLayout = layout;
+  window.__funnelFit = fit;
 
   const ro = new ResizeObserver(() => layout());
   ro.observe(visual);
+  if (stage && stage !== visual) ro.observe(stage);
+  window.addEventListener("resize", layout);
   if (document.readyState === "complete") layout();
   else window.addEventListener("load", layout, { once: true });
   reducedMq.addEventListener("change", layout);
@@ -244,14 +270,30 @@
 
   let badgeRaf = 0;
 
+  function layoutScale() {
+    const visual = root.querySelector(".funnel-visual");
+    if (!visual || visual.offsetWidth < 1) return 1;
+    return visual.getBoundingClientRect().width / visual.offsetWidth;
+  }
+
   function layoutRail() {
     if (!wrap || !pager || !rail || !badgeTrack) return;
     const wr = wrap.getBoundingClientRect();
     const pr = pager.getBoundingClientRect();
-    const railBox = rail.getBoundingClientRect();
-    if (wr.width < 8 || pr.height < 8 || railBox.width < 8) return;
-    badgeTrack.style.top = (pr.top - railBox.top) + "px";
-    badgeTrack.style.height = pr.height + "px";
+    if (wr.width < 8 || pr.height < 8) return;
+    const s = layoutScale() || 1;
+    if (getComputedStyle(rail).position === "absolute") {
+      // Overlay rail: size it to the feed pager so pills sit beside the card.
+      rail.style.top = ((pr.top - wr.top) / s) + "px";
+      rail.style.height = (pr.height / s) + "px";
+      badgeTrack.style.top = "0px";
+      badgeTrack.style.height = "100%";
+    } else {
+      const railBox = rail.getBoundingClientRect();
+      if (railBox.width < 8) return;
+      badgeTrack.style.top = ((pr.top - railBox.top) / s) + "px";
+      badgeTrack.style.height = (pr.height / s) + "px";
+    }
     paintBadges();
   }
 
