@@ -1353,7 +1353,7 @@ h3 { line-height: 1.2; }
 .cta-row .store-badge { flex: 0 0 auto; }
 
 
-/* Desktop QR panel for web CTAs (iPhone follows the /web link). */
+/* Desktop QR panel for web CTAs (iPhone follows the web.seelater.app link). */
 .web-qr {
   position: fixed;
   inset: 0;

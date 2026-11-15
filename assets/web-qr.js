@@ -4,10 +4,10 @@
 (function () {
   const PANELS = {
     web: {
-      url: "https://seelater.app/web",
+      url: "https://web.seelater.app",
       qr: "/assets/img/qr-web.svg",
       title: "Open it on your iPhone",
-      displayUrl: "seelater.app/web",
+      displayUrl: "web.seelater.app",
       note: "Works in Safari on iPhone",
     },
     store: {
