@@ -75,8 +75,11 @@
 
 .setup-btn-note {
   margin: 8px 0 0;
+  margin-inline: auto;
+  max-width: 28rem;
   text-align: center;
   font-size: 0.8125rem;
+  line-height: 1.4;
   color: var(--cream-55);
 }
 
@@ -354,4 +357,89 @@
 .setup,
 .setup a {
   overflow-wrap: anywhere;
+}
+
+
+/* iPhone-only note */
+
+.setup-iphone-note {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin: 16px 0 20px;
+  padding: 14px 16px;
+  background: color-mix(in srgb, var(--mint) 22%, var(--bg-elev));
+  border: 1px solid color-mix(in srgb, var(--mint-2) 50%, var(--cream-10));
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.setup-iphone-icon {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-elev);
+  color: var(--mint-text);
+  box-shadow: 0 0 0 1px var(--cream-10);
+}
+
+.setup-iphone-note p {
+  margin: 0;
+  padding-top: 3px;
+  font-size: 1.0125rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.4;
+  color: var(--cream);
+}
+
+/* QR is desktop-only: wide viewport, hidden on touch-first devices
+   (phones/tablets: hover:none + pointer:coarse) even if the window is wide. */
+.setup-qr { display: none; }
+
+@media (min-width: 900px) and (not ((hover: none) and (pointer: coarse))) {
+  .setup-lead-row {
+    display: flex;
+    align-items: center;
+    gap: 28px;
+    margin: 0 0 28px;
+  }
+
+  .setup-lead-row .setup-actions-top {
+    flex: 1;
+    min-width: 0;
+    margin-bottom: 0;
+  }
+
+  .setup-qr {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin: 0;
+    flex-shrink: 0;
+  }
+
+  .setup-qr img {
+    width: 148px;
+    height: 148px;
+    padding: 8px;
+    background: #fff;
+    border: 1px solid var(--cream-10);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+
+  .setup-qr figcaption {
+    max-width: 10.75rem;
+    margin: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    line-height: 1.35;
+    color: var(--cream-55);
+  }
 }
