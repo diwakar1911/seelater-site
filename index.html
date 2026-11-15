@@ -301,6 +301,68 @@
         <div class="glow glow-before"></div>
         <div class="glow glow-after"></div>
 
+        <ol class="hop-story hop-story-before" aria-label="The hop between apps">
+          <li class="hop-step is-active" data-start="0" data-end="11">
+            <span class="hop-step-icon"><img src="assets/img/icons/messages.png" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Messages</span>
+              <span class="hop-step-cap">You get the videos</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="11" data-end="13.5">
+            <span class="hop-step-icon"><img src="assets/img/icons/tiktok.png" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">TikTok</span>
+              <span class="hop-step-cap">TikTok opens</span>
+            </span>
+          </li>
+          <li class="hop-step hop-step-back" data-start="13.5" data-end="15.5">
+            <span class="hop-step-icon">
+              <img src="assets/img/icons/messages.png" width="32" height="32" alt="">
+              <span class="hop-step-return" aria-hidden="true">↩</span>
+            </span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Messages</span>
+              <span class="hop-step-cap">Back. Find the next one.</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="15.5" data-end="17.5">
+            <span class="hop-step-icon"><img src="assets/img/icons/instagram.png" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Instagram</span>
+              <span class="hop-step-cap">Reels opens</span>
+            </span>
+          </li>
+          <li class="hop-step hop-step-back" data-start="17.5" data-end="20.5">
+            <span class="hop-step-icon">
+              <img src="assets/img/icons/messages.png" width="32" height="32" alt="">
+              <span class="hop-step-return" aria-hidden="true">↩</span>
+            </span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Messages</span>
+              <span class="hop-step-cap">Back to Messages</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="20.5" data-end="22.5">
+            <span class="hop-step-icon"><img src="assets/img/icons/youtube.png" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">YouTube</span>
+              <span class="hop-step-cap">A YouTube Short</span>
+            </span>
+          </li>
+          <li class="hop-step hop-step-back" data-start="22.5" data-end="40">
+            <span class="hop-step-icon">
+              <img src="assets/img/icons/messages.png" width="32" height="32" alt="">
+              <span class="hop-step-return" aria-hidden="true">↩</span>
+            </span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Messages</span>
+              <span class="hop-step-cap">And back again</span>
+            </span>
+          </li>
+        </ol>
+        <p class="hop-story-live" aria-hidden="true">You get the videos</p>
+
         <figure class="phone phone-before">
           <div class="phone-tag">
             <span class="phone-pill phone-pill-before">Before</span>
@@ -367,6 +429,47 @@
             </div>
           </div>
         </figure>
+
+        <ol class="hop-story hop-story-after" aria-label="Watching in SeeLater">
+          <li class="hop-step is-active" data-start="0" data-end="6.5">
+            <span class="hop-step-icon"><img src="assets/img/icon.svg" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">SeeLater</span>
+              <span class="hop-step-cap">Open SeeLater</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="6.5" data-end="14.5">
+            <span class="hop-step-icon"><img src="assets/img/icon.svg" width="32" height="32" alt=""></span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">One feed</span>
+              <span class="hop-step-cap">Watch in one scroll</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="14.5" data-end="30">
+            <span class="hop-step-icon hop-step-icon-swipe" aria-hidden="true">
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <rect x="1" y="1" width="30" height="30" rx="9" fill="#14582a"/>
+                <path d="M16 22V10M16 10l-5 5M16 10l5 5" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Still here</span>
+              <span class="hop-step-cap">Swipe up. Next video.</span>
+            </span>
+          </li>
+          <li class="hop-step" data-start="30" data-end="40">
+            <span class="hop-step-icon hop-step-icon-done" aria-hidden="true">
+              <svg viewBox="0 0 32 32" width="32" height="32">
+                <rect x="1" y="1" width="30" height="30" rx="9" fill="#14582a"/>
+                <path d="M9.5 16.2l4.2 4.2 8.8-9.2" fill="none" stroke="#fff" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+            <span class="hop-step-body">
+              <span class="hop-step-app">Done</span>
+              <span class="hop-step-cap">You're all caught up</span>
+            </span>
+          </li>
+        </ol>
       </div>
     </section>
 
@@ -671,6 +774,7 @@
   </footer>
 
   <script src="assets/hero-sync.js" defer></script>
+  <script src="assets/hop-story.js" defer></script>
   <script src="assets/funnel.js" defer></script>
   <script src="assets/web-qr.js" defer></script>
 </body>

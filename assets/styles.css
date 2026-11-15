@@ -983,63 +983,57 @@ h3 { line-height: 1.2; }
 
 .trust-head {
   display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px 10px;
+  flex-direction: column;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+  gap: 6px;
 }
 
 .trust-label {
   margin: 0;
-  font-size: 0.8125rem;
+  font-size: 0.6875rem;
   font-weight: 650;
   letter-spacing: -0.02em;
   color: var(--cream-55);
   white-space: nowrap;
   line-height: 1;
 }
-.trust-label::after { content: ":"; }
 
 .trust-pills {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-wrap: nowrap;
+  gap: 8px 12px;
   list-style: none;
   margin: 0;
   padding: 0;
-}
-
-/* Let the "iPhone app:" label sit on the same row as the first pills. */
-.trust-head .trust-pills {
-  display: contents;
+  width: 100%;
 }
 
 .trust-pills li {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 7px 11px 7px 9px;
-  border-radius: 999px;
-  border: 1px solid var(--cream-16);
-  background: var(--bg-card-2);
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
   color: var(--cream);
   font-size: 0.8125rem;
   font-weight: 650;
   letter-spacing: -0.02em;
   line-height: 1;
+  white-space: nowrap;
 }
 
 .trust-pills svg {
   display: block;
   flex-shrink: 0;
+  width: 13px;
+  height: 13px;
   color: var(--mint-text);
 }
 
-.trust-note {
-  margin: 10px 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.45;
-  color: var(--cream-55);
-}
+/* The three perks already say this. */
+.trust-note { display: none; }
 
 .close .trust {
   margin: 16px auto 0;
@@ -1048,12 +1042,8 @@ h3 { line-height: 1.2; }
 
 .close .trust-head,
 .close .trust-pills {
+  align-items: center;
   justify-content: center;
-}
-
-.close .trust-note {
-  margin: 10px auto 0;
-  color: var(--cream-55);
 }
 
 @media (max-width: 430px) {
@@ -1119,10 +1109,17 @@ h3 { line-height: 1.2; }
 
 .cta-row {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: flex-start;
-  gap: 8px 10px;
-  margin: 0 0 8px;
+  gap: 10px;
+  margin: 0 0 12px;
+}
+
+.cta-row .store-badge {
+  height: 40px;
+  padding: 0;
+  flex: 0 0 auto;
+  align-self: flex-start;
 }
 
 .web-cta-wrap {
@@ -1130,17 +1127,18 @@ h3 { line-height: 1.2; }
   flex-direction: column;
   align-items: center;
   flex: 0 0 auto;
-  margin: 10px 8px 0 6px;
+  margin: 0;
 }
 
 .web-cta-wrap .web-cta {
   margin: 0;
+  height: 40px;
 }
 
 .web-cta-note {
-  margin: 5px 0 0;
-  font-size: 0.8125rem;
-  line-height: 1.3;
+  margin: 4px 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.2;
   color: var(--cream-55);
   text-align: center;
   white-space: nowrap;
@@ -1180,7 +1178,7 @@ h3 { line-height: 1.2; }
   box-sizing: border-box;
   height: 40px;
   padding: 0 16px;
-  margin: 10px 8px 10px 6px;
+  margin: 0;
   border-radius: 12px;
   background: var(--mint);
   color: var(--mint-text);
@@ -1197,7 +1195,7 @@ h3 { line-height: 1.2; }
   outline-offset: 2px;
 }
 
-.close .web-cta-wrap { margin: 10px 8px 0; }
+.close .web-cta-wrap { margin: 0; }
 .close .cta-row { justify-content: center; }
 
 .webuse { padding: 8px 0 80px; }
@@ -1410,68 +1408,19 @@ h3 { line-height: 1.2; }
   .store-badge-nav { padding: 0; }
   .store-badge-nav img { height: 36px; width: auto; }
 
-  .cta-row {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 10px;
-    margin: 0 0 12px;
-  }
-  .cta-row .store-badge {
-    height: 40px;
-    padding: 0;
-    flex: 0 0 auto;
-    align-self: flex-start;
-  }
+  /* Stretch the web button to the remaining row width on narrow screens. */
   .web-cta-wrap {
-    margin: 0;
-    align-items: center;
     flex: 1 1 auto;
     min-width: 0;
   }
   .cta-row .web-cta,
   .web-cta-wrap .web-cta {
-    height: 40px;
-    margin: 0;
     width: 100%;
     padding: 0 12px;
-    box-sizing: border-box;
   }
-  .web-cta-note {
-    margin: 4px 0 0;
-    font-size: 0.6875rem;
-    line-height: 1.2;
-  }
-
   .trust { margin-top: 2px; }
-  .trust-head {
-    flex-direction: column;
-    flex-wrap: nowrap;
-    align-items: flex-start;
-    gap: 6px;
-  }
-  .trust-label {
-    font-size: 0.6875rem;
-    font-weight: 650;
-  }
-  .trust-label::after { content: none; }
-  .trust-head .trust-pills {
-    display: flex;
-    flex-wrap: nowrap;
-    width: 100%;
-    gap: 8px 10px;
-  }
-  .trust-pills li {
-    border: 0;
-    background: none;
-    padding: 0;
-    gap: 4px;
-    font-size: 0.75rem;
-    white-space: nowrap;
-  }
+  .trust-pills li { font-size: 0.75rem; }
   .trust-pills svg { width: 12px; height: 12px; }
-  /* Note restates the three perks. */
-  .trust-note { display: none; }
 }
 
 
@@ -2264,7 +2213,7 @@ h3 { line-height: 1.2; }
     margin-left: 4px;
     margin-right: 0;
     /* Padding keeps the hanging (mostly beside-the-phone) pill in the canvas. */
-    padding: 0 92px 0 0;
+    padding: 0 80px 0 0;
     box-sizing: border-box;
     justify-self: start;
     grid-template-columns: auto;
@@ -2279,21 +2228,33 @@ h3 { line-height: 1.2; }
     grid-column: 1;
     grid-row: 1;
   }
-  /* Smaller pill, mostly beside the phone, overlapping the right edge only slightly. */
+  /* Content-sized pill on the phone's right; desktop width stays 9.75rem. */
   .funnel-badge-rail {
     position: absolute;
     right: 0;
-    width: 6.75rem;
+    width: 0;
     grid-column: auto;
     grid-row: auto;
     z-index: 6;
     overflow: visible;
     pointer-events: none;
   }
+  .funnel-badge-track {
+    left: auto;
+    right: 0;
+    width: max-content;
+  }
+  .funnel-badge-slot {
+    left: auto;
+    right: 0;
+    width: max-content;
+    justify-content: flex-end;
+  }
   .funnel-out-badge {
-    width: 6.75rem;
-    height: 24px;
-    padding: 2px 6px 2px 2px;
+    width: auto;
+    max-width: none;
+    height: 20px;
+    padding: 1px 7px 1px 2px;
     background: rgba(255, 255, 255, 0.78);
     -webkit-backdrop-filter: blur(16px) saturate(1.15);
     backdrop-filter: blur(16px) saturate(1.15);
@@ -2302,16 +2263,16 @@ h3 { line-height: 1.2; }
       0 4px 12px rgba(10, 13, 14, 0.16);
   }
   .funnel-out-badge .funnel-mark {
-    width: 20px;
-    height: 20px;
+    width: 16px;
+    height: 16px;
     padding: 0;
     border-radius: 50%;
     background: rgba(255, 255, 255, 0.95);
     box-shadow: 0 0 0 1px rgba(10, 13, 14, 0.06);
   }
-  .funnel-out-badge .funnel-mark img { width: 12px; height: 12px; }
-  .funnel-out-badge .funnel-mark-yt img { width: 14px; height: 14px; }
-  .funnel-out-badge .funnel-brand-name { font-size: 9px; padding-right: 1px; }
+  .funnel-out-badge .funnel-mark img { width: 10px; height: 10px; }
+  .funnel-out-badge .funnel-mark-yt img { width: 12px; height: 12px; }
+  .funnel-out-badge .funnel-brand-name { font-size: 8.5px; padding-right: 0; }
   .funnel-chip-travel {
     width: 7.75rem;
     height: 26px;
@@ -2507,4 +2468,346 @@ h3 { line-height: 1.2; }
 .funnel-sl-watch.is-yes {
   color: #B0F2B3;
   background: rgba(176, 242, 179, 0.10);
+}
+
+/* ---- Hop story: illustrated app-switch steps beside Before/After phones ---- */
+
+.hop-story {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  position: relative;
+  z-index: 2;
+}
+
+.hop-step {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  position: relative;
+  margin: 0;
+  padding: 5px 8px 5px 4px;
+  border-radius: 14px;
+  opacity: 0.4;
+  transform: translateX(0);
+  transition:
+    opacity 0.35s var(--ease),
+    transform 0.35s var(--ease),
+    background 0.35s var(--ease),
+    box-shadow 0.35s var(--ease);
+}
+
+.hop-step.is-active {
+  opacity: 1;
+  transform: translateX(2px);
+}
+
+.hop-step-icon {
+  position: relative;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 32px;
+  border-radius: 9px;
+  background: #fff;
+  box-shadow:
+    0 0 0 1px rgba(10, 13, 14, 0.08),
+    0 2px 6px rgba(10, 13, 14, 0.06);
+  overflow: visible;
+  z-index: 1;
+}
+
+.hop-step-icon img,
+.hop-step-icon svg {
+  display: block;
+  width: 32px;
+  height: 32px;
+  border-radius: 9px;
+  object-fit: cover;
+}
+
+.hop-step.is-active .hop-step-icon {
+  box-shadow:
+    0 0 0 2px #9b2c2c,
+    0 4px 12px rgba(155, 44, 44, 0.28);
+}
+
+.hop-story-after .hop-step.is-active .hop-step-icon {
+  box-shadow:
+    0 0 0 2px #14582a,
+    0 4px 12px rgba(20, 88, 42, 0.28);
+}
+
+.hop-step-body {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+}
+
+.hop-step-app {
+  font-size: 0.625rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.2;
+  color: #9b2c2c;
+}
+
+.hop-story-after .hop-step-app { color: #14582a; }
+
+.hop-step-cap {
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  color: var(--ink);
+}
+
+.hop-step-return {
+  position: absolute;
+  right: -5px;
+  bottom: -5px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #9b2c2c;
+  color: #fff;
+  font-size: 9px;
+  font-weight: 700;
+  line-height: 16px;
+  text-align: center;
+  box-shadow: 0 0 0 2px var(--bg);
+}
+
+.hop-story-before.is-static .hop-step,
+.hop-story-after.is-static .hop-step {
+  opacity: 0.92;
+  transform: none;
+}
+
+.hop-story-before.is-static .hop-step-icon,
+.hop-story-after.is-static .hop-step-icon {
+  box-shadow:
+    0 0 0 1px rgba(10, 13, 14, 0.08),
+    0 2px 6px rgba(10, 13, 14, 0.06);
+}
+
+/* Vertical rail on desktop. Hidden until the side-column layout kicks in. */
+.hop-story-before::before,
+.hop-story-after::before {
+  content: none;
+}
+
+/* Desktop: steps sit in the empty cream on either side of the phones. */
+@media (min-width: 1080px) {
+  .hero-device {
+    display: grid;
+    grid-template-columns: minmax(168px, 1fr) auto auto auto minmax(148px, 1fr);
+    align-items: end;
+    justify-content: center;
+    gap: 8px 16px;
+    width: 100%;
+  }
+
+  .hop-story-before { grid-column: 1; }
+  .phone-before { grid-column: 2; }
+  .hero-split { grid-column: 3; }
+  .phone-after { grid-column: 4; }
+  .hop-story-after { grid-column: 5; }
+
+  .hop-story {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: stretch;
+    /* Sit beside the bezel, not the Before/After labels */
+    padding-top: 52px;
+    gap: 4px;
+  }
+  .hop-story .hop-step { width: 100%; box-sizing: border-box; }
+
+  .hop-story-after { gap: 10px; }
+
+  .hop-story-live { display: none; }
+
+  .hop-story-before::before,
+  .hop-story-after::before {
+    content: "";
+    position: absolute;
+    left: 19px;
+    top: calc(52px + 18px);
+    bottom: 18px;
+    width: 2px;
+    border-radius: 2px;
+    pointer-events: none;
+  }
+  .hop-story-before::before {
+    background: rgba(155, 44, 44, 0.22);
+  }
+  .hop-story-after::before {
+    left: auto;
+    right: 19px;
+    background: rgba(20, 88, 42, 0.22);
+  }
+
+  /* Mirror the After steps so icons sit next to the phone. */
+  .hop-story-after .hop-step {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+  .hop-story-after .hop-step.is-active {
+    transform: translateX(-2px);
+  }
+  .hop-story-after .hop-step-body {
+    align-items: flex-end;
+  }
+
+  .hop-step.is-active {
+    background: rgba(155, 44, 44, 0.08);
+  }
+  .hop-story-after .hop-step.is-active {
+    background: rgba(20, 88, 42, 0.08);
+  }
+}
+
+/* Mid and small screens: a compact icon strip above the phones.
+   Don't try to park a vertical timeline in the leftover gap. */
+@media (max-width: 1079px) {
+  .hero-device {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hop-story-before {
+    flex: 0 0 100%;
+    width: 100%;
+    max-width: 100%;
+    order: -1;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    gap: 0;
+    padding: 4px 0 0;
+    margin: 0;
+  }
+
+  .hop-story-live {
+    flex: 0 0 100%;
+    order: -1;
+    width: 100%;
+    margin: 6px 0 10px;
+    padding: 0;
+    text-align: center;
+    font-size: 0.75rem;
+    font-weight: 650;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+    color: #7a1f1f;
+    min-height: 1.2em;
+  }
+
+  .hop-story-after { display: none; }
+
+  .hop-story-before .hop-step {
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 0;
+    padding: 2px 5px;
+    margin: 0;
+    opacity: 0.38;
+    transform: none;
+    border-radius: 12px;
+    position: relative;
+    background: transparent;
+  }
+
+  .hop-story-before .hop-step + .hop-step::before {
+    content: "";
+    position: absolute;
+    left: -5px;
+    top: 14px;
+    width: 6px;
+    height: 6px;
+    border-right: 1.5px solid rgba(155, 44, 44, 0.45);
+    border-top: 1.5px solid rgba(155, 44, 44, 0.45);
+    transform: rotate(45deg);
+    pointer-events: none;
+  }
+
+  .hop-story-before .hop-step-icon,
+  .hop-story-before .hop-step-icon img,
+  .hop-story-before .hop-step-icon svg {
+    width: 26px;
+    height: 26px;
+    border-radius: 7px;
+    flex-basis: 26px;
+  }
+
+  .hop-step-return {
+    width: 13px;
+    height: 13px;
+    line-height: 13px;
+    font-size: 8px;
+    right: -4px;
+    bottom: -4px;
+  }
+
+  .hop-story-before .hop-step-body,
+  .hop-story-before .hop-step-app,
+  .hop-story-before .hop-step-cap { display: none; }
+
+  .hop-story-before .hop-step.is-active {
+    opacity: 1;
+    background: transparent;
+  }
+
+  .hop-story-before.is-static .hop-step { opacity: 0.85; }
+  .hop-story.is-static + .hop-story-live { opacity: 0.85; }
+}
+
+@media (max-width: 430px) {
+  .hop-story-before {
+    padding: 0;
+    margin: 0;
+    gap: 0;
+  }
+  .hop-story-live {
+    margin: 5px 0 8px;
+    font-size: 0.6875rem;
+  }
+  .hop-story-before .hop-step { padding: 2px 4px; }
+  .hop-story-before .hop-step + .hop-step::before {
+    left: -4px;
+    top: 13px;
+    width: 5px;
+    height: 5px;
+  }
+  .hop-story-before .hop-step-icon,
+  .hop-story-before .hop-step-icon img,
+  .hop-story-before .hop-step-icon svg {
+    width: 24px;
+    height: 24px;
+    border-radius: 6px;
+    flex-basis: 24px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .hop-step {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* With the hop strip wrapping above the phones, keep the two phones
+   on one row at mobile widths. Account for hero-device's 8px padding. */
+@media (max-width: 600px) {
+  .phone {
+    width: min(182px, calc((100vw - 72px) / 2));
+    flex-shrink: 0;
+  }
+  .hero-split { flex-shrink: 0; }
 }
