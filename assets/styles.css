@@ -887,3 +887,75 @@ h3 { line-height: 1.2; }
 }
 
 .close .store-badge { margin-top: 4px; }
+
+/* Trust row under Download buttons */
+.trust {
+  margin-top: 6px;
+  max-width: 34rem;
+}
+
+.trust-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.trust-pills li {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 11px 7px 9px;
+  border-radius: 999px;
+  border: 1px solid var(--cream-16);
+  background: var(--bg-card-2);
+  color: var(--cream);
+  font-size: 0.8125rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1;
+}
+
+.trust-pills svg {
+  display: block;
+  flex-shrink: 0;
+  color: var(--mint-text);
+}
+
+.trust-note {
+  margin: 10px 0 0;
+  font-size: 0.8125rem;
+  line-height: 1.45;
+  color: var(--cream-55);
+}
+
+.close .trust {
+  margin: 16px auto 0;
+  max-width: 28rem;
+}
+
+.close .trust-pills {
+  justify-content: center;
+}
+
+.close .trust-note {
+  margin: 10px auto 0;
+  color: var(--cream-55);
+}
+
+@media (max-width: 430px) {
+  .trust {
+    margin-top: 4px;
+  }
+
+  .trust-pills {
+    gap: 6px;
+  }
+
+  .trust-pills li {
+    font-size: 0.75rem;
+    padding: 6px 10px 6px 8px;
+  }
+}
