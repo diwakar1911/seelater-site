@@ -1035,6 +1035,20 @@ h3 { line-height: 1.2; }
 /* The three perks already say this. */
 .trust-note { display: none; }
 
+/* Subtle web-app caveat under the iPhone-app perks. Same type as "For iPhone". */
+.trust-disclaimer {
+  margin: 6px 0 0;
+  font-size: 0.6875rem;
+  line-height: 1.2;
+  font-weight: 450;
+  letter-spacing: -0.02em;
+  color: var(--cream-55);
+  white-space: nowrap;
+}
+.close .trust-disclaimer {
+  text-align: center;
+}
+
 .close .trust {
   margin: 16px auto 0;
   max-width: 28rem;
@@ -2489,6 +2503,7 @@ h3 { line-height: 1.2; }
   padding: 5px 8px 5px 4px;
   border-radius: 14px;
   opacity: 0.4;
+  cursor: pointer;
   transform: translateX(0);
   transition:
     opacity 0.35s var(--ease),
@@ -2616,13 +2631,14 @@ h3 { line-height: 1.2; }
   .hop-story-after { grid-column: 5; }
 
   .hop-story {
-    align-self: stretch;
+    align-self: center;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: stretch;
-    /* Sit beside the bezel, not the Before/After labels */
-    padding-top: 52px;
+    /* Center on the phone bezels, not the labels (same offset as .hero-split). */
+    margin-top: 52px;
+    padding-top: 0;
     gap: 4px;
   }
   .hop-story .hop-step { width: 100%; box-sizing: border-box; }
@@ -2635,19 +2651,20 @@ h3 { line-height: 1.2; }
   .hop-story-after::before {
     content: "";
     position: absolute;
-    left: 19px;
-    top: calc(52px + 18px);
-    bottom: 18px;
+    left: 20px;
+    top: 21px;
+    bottom: 21px;
     width: 2px;
     border-radius: 2px;
     pointer-events: none;
+    z-index: 0;
   }
   .hop-story-before::before {
     background: rgba(155, 44, 44, 0.22);
   }
   .hop-story-after::before {
     left: auto;
-    right: 19px;
+    right: 24px;
     background: rgba(20, 88, 42, 0.22);
   }
 
@@ -2810,4 +2827,184 @@ h3 { line-height: 1.2; }
     flex-shrink: 0;
   }
   .hero-split { flex-shrink: 0; }
+}
+
+
+.hop-step:hover { opacity: 0.72; }
+.hop-step.is-active:hover { opacity: 1; }
+.hop-step:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+}
+
+/* Loop scrubber under the two phones */
+.loop-scrub {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: min(560px, calc(100% - 16px));
+  margin: 22px auto 0;
+  padding: 0 4px;
+  box-sizing: border-box;
+}
+.loop-scrub-play {
+  flex: 0 0 40px;
+  width: 40px;
+  height: 40px;
+  border: 0;
+  border-radius: 50%;
+  background: #0A0D0E;
+  color: #FEF6EC;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  padding: 0;
+}
+.loop-scrub-play .loop-scrub-ic { display: block; }
+.loop-scrub-play .loop-scrub-ic-pause,
+.loop-scrub-play.is-playing .loop-scrub-ic-play,
+.loop-scrub-play .loop-scrub-ic[hidden] { display: none !important; }
+.loop-scrub-play.is-playing .loop-scrub-ic-pause { display: block !important; }
+.loop-scrub-play:hover { background: #1c2224; }
+.loop-scrub-play:focus-visible {
+  outline: 2px solid #0A0D0E;
+  outline-offset: 3px;
+}
+.loop-scrub-body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.loop-scrub-range-wrap {
+  position: relative;
+  height: 44px;
+  display: flex;
+  align-items: center;
+}
+.loop-scrub-track {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 50%;
+  height: 6px;
+  transform: translateY(-50%);
+  border-radius: 99px;
+  background: #0A0D0E;
+  pointer-events: none;
+  z-index: 1;
+}
+.loop-scrub-fill {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 6px;
+  width: 0%;
+  transform: translateY(-50%);
+  border-radius: 99px;
+  background: linear-gradient(90deg, #9b2c2c 0%, #B0F1B1 100%);
+  pointer-events: none;
+  z-index: 2;
+  max-width: 100%;
+}
+.loop-scrub-range {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 100%;
+  height: 44px;
+  margin: 0;
+  background: transparent;
+  position: relative;
+  z-index: 3;
+  cursor: pointer;
+}
+.loop-scrub-range:focus-visible {
+  outline: none;
+}
+.loop-scrub-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px #FEF6EC, 0 0 0 5px #0A0D0E;
+}
+.loop-scrub-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px #FEF6EC, 0 0 0 5px #0A0D0E;
+}
+.loop-scrub-range::-webkit-slider-runnable-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 99px;
+}
+.loop-scrub-range::-moz-range-track {
+  height: 6px;
+  background: transparent;
+  border-radius: 99px;
+  border: 0;
+}
+.loop-scrub-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 18px;
+  height: 18px;
+  margin-top: -6px;
+  border-radius: 50%;
+  background: #FEF6EC;
+  border: 2px solid #0A0D0E;
+  box-shadow: 0 1px 4px rgba(10, 13, 14, 0.28);
+  cursor: grab;
+}
+.loop-scrub-range::-moz-range-thumb {
+  width: 18px;
+  height: 18px;
+  border-radius: 50%;
+  background: #FEF6EC;
+  border: 2px solid #0A0D0E;
+  box-shadow: 0 1px 4px rgba(10, 13, 14, 0.28);
+  cursor: grab;
+}
+.loop-scrub-range:active::-webkit-slider-thumb,
+.loop-scrub-range:active::-moz-range-thumb { cursor: grabbing; }
+.loop-scrub-ticks {
+  position: relative;
+  height: 18px;
+  margin: 0 9px;
+}
+.loop-scrub-tick {
+  position: absolute;
+  top: 0;
+  transform: translateX(-50%);
+  border: 0;
+  background: none;
+  padding: 0;
+  margin: 0;
+  font: 650 0.625rem/1 var(--font);
+  letter-spacing: -0.01em;
+  color: var(--cream-55);
+  cursor: pointer;
+  white-space: nowrap;
+}
+.loop-scrub-tick:first-child { transform: translateX(0); }
+.loop-scrub-tick.is-current { color: var(--ink); }
+.loop-scrub-tick:hover,
+.loop-scrub-tick:focus-visible { color: var(--ink); }
+.loop-scrub-tick:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 2px;
+  border-radius: 3px;
+}
+
+@media (max-width: 600px) {
+  .loop-scrub {
+    width: calc(100% - 8px);
+    margin-top: 16px;
+    gap: 8px;
+  }
+  .loop-scrub-play {
+    flex-basis: 44px;
+    width: 44px;
+    height: 44px;
+  }
+  .loop-scrub-tick[data-start="11"] {
+    /* TikTok and Reels sit too close on a narrow track. */
+    display: none;
+  }
 }

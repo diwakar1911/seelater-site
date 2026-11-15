@@ -17,6 +17,8 @@
   var startedAt = 0;
   var hasPlayed = false;
   var visible = false;
+  var userPaused = false;
+  var scrubbing = false;
   var loops = [];
   var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var THRESHOLD = 0.45;
@@ -71,8 +73,10 @@
     );
   }
 
-  function playBoth() {
-    if (prefersReduced() || !visible) return Promise.resolve();
+  function playBoth(force) {
+    if (scrubbing) return Promise.resolve();
+    if (!force && (userPaused || !visible)) return Promise.resolve();
+    if (!force && prefersReduced()) return Promise.resolve();
     return Promise.all(
       videos.map(function (v) {
         var play = v.play();
@@ -88,7 +92,7 @@
   }
 
   function startTogether() {
-    if (ready || hasPlayed) return;
+    if (ready || hasPlayed || userPaused || scrubbing) return;
     if (prefersReduced() || !visible) return;
     if (!videos.every(function (v) { return v.readyState >= 3; })) return;
     ready = true;
@@ -104,7 +108,7 @@
   }
 
   function restartTogether(reason) {
-    if (!ready || cycling || !visible || prefersReduced()) return;
+    if (!ready || cycling || !visible || prefersReduced() || userPaused || scrubbing) return;
     cycling = true;
     var wall = performance.now();
     var before = videos.map(function (v) {
@@ -136,8 +140,9 @@
 
   function onVisibility(isVisible) {
     visible = isVisible;
-    if (prefersReduced()) {
-      pauseBoth();
+    if (prefersReduced() || userPaused || scrubbing) {
+      if (!isVisible) pauseBoth();
+      else if (prefersReduced() && !userPaused && !scrubbing) pauseBoth();
       return;
     }
     if (isVisible) {
@@ -154,7 +159,7 @@
   videos.forEach(function (v) {
     v.addEventListener("ended", function () { restartTogether("ended"); });
     v.addEventListener("timeupdate", function () {
-      if (!ready || cycling || !visible || prefersReduced()) return;
+      if (!ready || cycling || !visible || prefersReduced() || userPaused || scrubbing) return;
       var dur = v.duration;
       if (dur && isFinite(dur) && dur > 0 && v.currentTime >= dur - 0.04) {
         restartTogether("timeupdate");
@@ -215,11 +220,56 @@
   if (reducedMq.addEventListener) {
     reducedMq.addEventListener("change", function () {
       if (prefersReduced()) pauseBoth();
-      else if (visible) {
+      else if (visible && !userPaused && !scrubbing) {
         if (!hasPlayed) startTogether();
         else playBoth();
       }
     });
+  }
+
+  function duration() {
+    var durs = videos.map(function (v) { return v.duration; }).filter(function (d) {
+      return d && isFinite(d) && d > 0;
+    });
+    if (!durs.length) return 40;
+    return Math.min.apply(null, durs);
+  }
+
+  function currentTime() {
+    return videos[0] ? videos[0].currentTime || 0 : 0;
+  }
+
+  function seekBoth(t) {
+    hasPlayed = true;
+    ready = true;
+    var dur = duration();
+    var max = dur > 0.08 ? dur - 0.05 : dur;
+    t = Math.max(0, Math.min(max, t));
+    videos.forEach(function (v) {
+      try { v.currentTime = t; } catch (e) {}
+    });
+    if (window.__hopStory) {
+      if (typeof window.__hopStory.follow === "function") window.__hopStory.follow();
+      else if (typeof window.__hopStory.sync === "function") window.__hopStory.sync();
+    }
+    return t;
+  }
+
+  function userPlay() {
+    userPaused = false;
+    hasPlayed = true;
+    ready = true;
+    return playBoth(true);
+  }
+
+  function userPause() {
+    userPaused = true;
+    pauseBoth();
+  }
+
+  function setScrubbing(on) {
+    scrubbing = !!on;
+    if (scrubbing) pauseBoth();
   }
 
   window.__heroSync = {
@@ -229,6 +279,17 @@
     visible: function () { return visible; },
     hasPlayed: function () { return hasPlayed; },
     startedAt: function () { return startedAt; },
+    duration: duration,
+    currentTime: currentTime,
+    seekBoth: seekBoth,
+    userPlay: userPlay,
+    userPause: userPause,
+    setScrubbing: setScrubbing,
+    isUserPaused: function () { return userPaused; },
+    isScrubbing: function () { return scrubbing; },
+    isPlaying: function () {
+      return videos.some(function (v) { return !v.paused && !v.ended; });
+    },
     snapshot: function () {
       return {
         ready: ready,

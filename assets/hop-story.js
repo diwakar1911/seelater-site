@@ -23,6 +23,7 @@
   var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var THRESHOLD = 0.45;
   var visible = false;
+  var followTime = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   function prefersReduced() {
     return reducedMq.matches;
@@ -76,7 +77,7 @@
   }
 
   function sync() {
-    if (prefersReduced()) {
+    if (prefersReduced() && !followTime) {
       applyStatic(true);
       return;
     }
@@ -97,7 +98,9 @@
   function bind(video, steps, isBefore) {
     if (!video) return;
     function tick() {
-      if (visible && !prefersReduced()) activate(steps, video.currentTime || 0, isBefore);
+      if (!visible) return;
+      if (prefersReduced() && !followTime) return;
+      activate(steps, video.currentTime || 0, isBefore);
     }
     video.addEventListener("timeupdate", tick);
     video.addEventListener("seeked", tick);
@@ -123,7 +126,7 @@
 
   if (reducedMq.addEventListener) {
     reducedMq.addEventListener("change", function () {
-      if (prefersReduced()) applyStatic(true);
+      if (prefersReduced() && !followTime) applyStatic(true);
       else if (visible) sync();
     });
   }
@@ -131,5 +134,12 @@
   if (prefersReduced()) applyStatic(true);
   else setLive(beforeSteps[0]);
 
-  window.__hopStory = { sync: sync, visible: function () { return visible; } };
+  window.__hopStory = {
+    sync: sync,
+    visible: function () { return visible; },
+    follow: function () {
+      followTime = true;
+      sync();
+    }
+  };
 })();

@@ -75,6 +75,7 @@
             </ul>
           </div>
           <p class="trust-note">The iPhone app needs no account and keeps your queue on your phone.</p>
+          <p class="trust-disclaimer">The web version needs a sign-in.</p>
         </div>
       </div>
 
@@ -416,7 +417,7 @@
               <div class="phone-screen">
                 <video
                   class="phone-video"
-                  src="media/demo_after_v3.mp4"
+                  src="media/demo_after_v4.mp4"
                   poster="media/poster_after_v3.jpg"
                  
                   muted
@@ -470,6 +471,35 @@
             </span>
           </li>
         </ol>
+      </div>
+
+      <div class="loop-scrub" id="loopScrub">
+        <button type="button" class="loop-scrub-play" id="loopScrubPlay" aria-label="Play the loop">
+          <svg class="loop-scrub-ic loop-scrub-ic-play" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true"><path fill="currentColor" d="M6.4 3.8v12.4L16.2 10 6.4 3.8Z"/></svg>
+          <svg class="loop-scrub-ic loop-scrub-ic-pause" viewBox="0 0 20 20" width="16" height="16" aria-hidden="true" hidden><path fill="currentColor" d="M5.5 4h3.2v12H5.5V4Zm5.8 0H14.5v12h-3.2V4Z"/></svg>
+        </button>
+        <div class="loop-scrub-body">
+          <div class="loop-scrub-range-wrap">
+            <div class="loop-scrub-track" aria-hidden="true"></div>
+            <div class="loop-scrub-fill" id="loopScrubFill"></div>
+            <input
+              type="range"
+              class="loop-scrub-range"
+              id="loopScrubRange"
+              min="0"
+              max="40"
+              step="0.01"
+              value="0"
+              aria-label="Before and after loop position"
+            >
+          </div>
+          <div class="loop-scrub-ticks" aria-hidden="true">
+            <button type="button" class="loop-scrub-tick" data-start="0" style="left: 0%">Videos</button>
+            <button type="button" class="loop-scrub-tick" data-start="11" style="left: 27.5%">TikTok</button>
+            <button type="button" class="loop-scrub-tick" data-start="15.5" style="left: 38.75%">Reels</button>
+            <button type="button" class="loop-scrub-tick" data-start="20.5" style="left: 51.25%">Short</button>
+          </div>
+        </div>
       </div>
     </section>
 
@@ -608,7 +638,7 @@
     <section class="sources" id="sources">
       <div class="section-head">
         <p class="eyebrow">What it catches</p>
-        <h2>If they can send the link, that's the idea.</h2>
+        <h2>It works with the links they already send.</h2>
         <p>Starting with the three that show up in almost every chat.</p>
       </div>
       <ul class="source-list">
@@ -624,7 +654,7 @@
       <div class="section-head">
         <p class="eyebrow">Use it on the web</p>
         <h2>Open it now. Add it to your Home Screen.</h2>
-        <p>The web version lives at web.seelater.app and is for iPhone — not a computer or Android. Open it in Safari, then add it to your Home Screen so it opens like an app.</p>
+        <p>The web version lives at web.seelater.app and is for iPhone — not a computer or Android. It needs a sign-in. Open it in Safari, then add it to your Home Screen so it opens like an app.</p>
       </div>
       <ol class="web-grid">
         <li>
@@ -697,7 +727,7 @@
       <dl class="faq-list">
         <div>
           <dt>Does this leave my device?</dt>
-          <dd>The iPhone app keeps your queue on your iPhone. It needs no account.</dd>
+          <dd>The iPhone app keeps your queue on your iPhone. It needs no account. The web version needs a sign-in.</dd>
         </div>
         <div>
           <dt>Which apps does it work with?</dt>
@@ -709,7 +739,7 @@
         </div>
         <div>
           <dt>Where can I use it?</dt>
-          <dd>The iPhone app is iOS-only. The web version is for iPhone — open it at web.seelater.app in Safari, and you can add it to your Home Screen. The Save to SeeLater Shortcut is set up on iPhone.</dd>
+          <dd>The iPhone app is iOS-only. The web version is for iPhone and needs a sign-in — open it at web.seelater.app in Safari, and you can add it to your Home Screen. The Save to SeeLater Shortcut is set up on iPhone.</dd>
         </div>
         <div>
           <dt>How do I set up the Shortcut?</dt>
@@ -719,8 +749,8 @@
     </section>
 
     <section class="close">
-      <h2>The next pile is already on its way.</h2>
-      <p>Use SeeLater in Safari on iPhone, no download. Or get the iPhone app and watch the whole stack in one scroll.</p>
+      <h2>More videos will keep coming, and they'll land here too.</h2>
+      <p>Use SeeLater in Safari on iPhone, no download. Or get the iPhone app and watch every video in one scroll.</p>
       <div class="cta-row">
         <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
         <a class="store-badge" href="#">
@@ -759,6 +789,7 @@
           </ul>
         </div>
         <p class="trust-note">The iPhone app needs no account and keeps your queue on your phone.</p>
+        <p class="trust-disclaimer">The web version needs a sign-in.</p>
       </div>
     </section>
   </main>
@@ -775,6 +806,7 @@
 
   <script src="assets/hero-sync.js" defer></script>
   <script src="assets/hop-story.js" defer></script>
+  <script src="assets/loop-scrub.js" defer></script>
   <script src="assets/funnel.js" defer></script>
   <script src="assets/web-qr.js" defer></script>
 </body>
