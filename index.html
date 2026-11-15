@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>SeeLater: all the videos they send you, in one scroll</title>
+  <meta name="description" content="SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.">
+  <meta name="theme-color" content="#FEF6EC">
+  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="stylesheet" href="assets/styles.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="nav">
+    <a class="brand" href="#top" id="top">
+      <img src="assets/img/icon.svg" width="32" height="32" alt="">
+      <span>SeeLater</span>
+    </a>
+    <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
+    <a class="store-badge store-badge-nav" href="#">
+      <img src="assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
+    </a>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="hero-copy">
+        <p class="eyebrow">For the videos people send you</p>
+        <h1>All the videos they send you.<br>One scroll.</h1>
+        <p class="lede">They send the links. You bounce between TikTok, Reels, and Shorts, lose your place, and start over. SeeLater puts every video you get sent into one feed, so you can just scroll.</p>
+
+        <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
+        <a class="store-badge" href="#">
+          <img src="assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
+        </a>
+      </div>
+
+      <div class="hero-device">
+        <div class="glow glow-before"></div>
+        <div class="glow glow-after"></div>
+
+        <figure class="phone phone-before">
+          <div class="phone-tag">
+            <span class="phone-pill phone-pill-before">Before</span>
+            <p class="phone-cap">4 apps, 9 switches</p>
+          </div>
+          <div class="phone-body">
+            <span class="phone-btn phone-btn-silent" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-vol-up" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-vol-down" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-power" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-camera" aria-hidden="true"></span>
+            <div class="phone-bezel">
+              <div class="phone-screen">
+                <video
+                  class="phone-video"
+                  src="media/demo_problem_v5.mp4"
+                  poster="media/poster_problem_v5.jpg"
+                  autoplay
+                  muted
+                  loop
+                  playsinline
+                  webkit-playsinline
+                  preload="metadata"
+                  aria-label="Screen recording of jumping between Messages, TikTok, Instagram, and YouTube to watch videos someone sent."
+                ></video>
+              </div>
+            </div>
+          </div>
+        </figure>
+
+        <div class="hero-split" aria-hidden="true">
+          <span class="hero-arrow">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 12h12M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+
+        <figure class="phone phone-after phone-placeholder" aria-hidden="true">
+          <div class="phone-tag">
+            <span class="phone-pill phone-pill-after">
+              <img src="assets/img/icon.svg" width="16" height="16" alt="">
+              After · SeeLater
+            </span>
+            <p class="phone-cap">1 app, 0 switches</p>
+          </div>
+          <div class="phone-body">
+            <span class="phone-btn phone-btn-silent"></span>
+            <span class="phone-btn phone-btn-vol-up"></span>
+            <span class="phone-btn phone-btn-vol-down"></span>
+            <span class="phone-btn phone-btn-power"></span>
+            <span class="phone-btn phone-btn-camera"></span>
+            <div class="phone-bezel">
+              <div class="phone-screen"></div>
+            </div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="problem" id="problem">
+      <div class="section-head">
+        <p class="eyebrow">Before and after</p>
+        <h2>You know the loop.</h2>
+        <p>A link lands in Messages. You open it, watch twenty seconds, and switch back. You lost your place. There's another one, this time a Reel. Then a Short. By the time you catch up, twelve more have arrived.</p>
+      </div>
+
+      <div class="compare" role="group" aria-label="Before and after">
+        <article class="panel panel-before">
+          <p class="compare-kicker">The hop</p>
+          <h3 class="compare-label">Before</h3>
+          <p class="compare-stat compare-stat-bad">
+            <span class="stat-icon" aria-hidden="true">
+              <svg viewBox="0 0 20 20" width="16" height="16"><circle cx="10" cy="10" r="8.25" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M7 7l6 6M13 7l-6 6" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>
+            </span>
+            4 apps · 9 switches · lost your place
+          </p>
+          <ol class="hop-path">
+            <li>
+              <span class="hop-chip"><img src="assets/img/icons/messages.png" width="28" height="28" alt="">Messages</span>
+              <span class="hop-note">LOOK AT HIM 😭</span>
+            </li>
+            <li class="is-shift">
+              <span class="hop-chip"><img src="assets/img/icons/tiktok.png" width="28" height="28" alt="">TikTok</span>
+              <span class="hop-note">watch 12 seconds</span>
+            </li>
+            <li class="is-back">
+              <span class="hop-back" aria-hidden="true">↩</span>
+              <span class="hop-chip"><img src="assets/img/icons/messages.png" width="28" height="28" alt="">Messages</span>
+              <span class="hop-note"><s>find your place</s> lost it</span>
+            </li>
+            <li class="is-shift">
+              <span class="hop-chip"><img src="assets/img/icons/instagram.png" width="28" height="28" alt="">Instagram</span>
+              <span class="hop-note">it’s a Reel</span>
+            </li>
+            <li class="is-back">
+              <span class="hop-back" aria-hidden="true">↩</span>
+              <span class="hop-chip"><img src="assets/img/icons/messages.png" width="28" height="28" alt="">Messages</span>
+              <span class="hop-note">there are four more</span>
+            </li>
+            <li class="is-shift">
+              <span class="hop-chip"><img src="assets/img/icons/youtube.png" width="28" height="28" alt="">YouTube</span>
+              <span class="hop-note">and a Short</span>
+            </li>
+            <li class="is-back hop-end">
+              <span class="hop-back" aria-hidden="true">↩</span>
+              <span class="hop-chip"><img src="assets/img/icons/messages.png" width="28" height="28" alt="">Messages</span>
+              <span class="hop-note">…and back again</span>
+            </li>
+          </ol>
+        </article>
+
+        <div class="compare-split" aria-hidden="true">
+          <span class="compare-arrow">
+            <svg viewBox="0 0 24 24" width="22" height="22"><path d="M5 12h12M13 6l6 6-6 6" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </span>
+        </div>
+
+        <article class="panel panel-after">
+          <p class="compare-kicker">With SeeLater</p>
+          <h3 class="compare-label">After</h3>
+          <p class="compare-stat compare-stat-good">
+            <img class="stat-app" src="assets/img/icon.svg" width="22" height="22" alt="">
+            1 app · 0 switches
+          </p>
+          <ul class="queue">
+            <li>
+              <span class="q-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.2 8.2 6.3 11.2 12.8 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="q-from">Her</span>
+              <span class="q-title">LOOK AT HIM 😭</span>
+            </li>
+            <li>
+              <span class="q-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.2 8.2 6.3 11.2 12.8 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="q-from">Her</span>
+              <span class="q-title">this cat is literally you</span>
+            </li>
+            <li>
+              <span class="q-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.2 8.2 6.3 11.2 12.8 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="q-from">Dev</span>
+              <span class="q-title">you'll hate this</span>
+            </li>
+            <li>
+              <span class="q-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.2 8.2 6.3 11.2 12.8 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="q-from">Mom</span>
+              <span class="q-title">your cousin made this?</span>
+            </li>
+            <li>
+              <span class="q-check" aria-hidden="true">
+                <svg viewBox="0 0 16 16" width="14" height="14"><path d="M3.2 8.2 6.3 11.2 12.8 4.6" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </span>
+              <span class="q-from">Her</span>
+              <span class="q-title">the ending 💀</span>
+            </li>
+          </ul>
+          <p class="panel-foot">One scroll. That’s it.</p>
+        </article>
+      </div>
+    </section>
+
+    <section class="steps" id="how">
+      <div class="section-head">
+        <p class="eyebrow">How it works</p>
+        <h2>They send links. You get a feed.</h2>
+        <p>You don't have to talk anyone into a new app. They keep sending links the way they already do.</p>
+      </div>
+      <ol class="step-grid">
+        <li>
+          <span class="num">01</span>
+          <h3>They send you links</h3>
+          <p>In Messages, or wherever you already talk. TikToks, Reels, Shorts. The usual pile.</p>
+        </li>
+        <li>
+          <span class="num">02</span>
+          <h3>SeeLater collects them</h3>
+          <p>Those links land in one place on your phone, instead of getting buried in the thread.</p>
+        </li>
+        <li>
+          <span class="num">03</span>
+          <h3>You scroll the lot</h3>
+          <p>One vertical feed, with watched and unwatched marked, so you can actually finish it.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="sources" id="sources">
+      <div class="section-head">
+        <p class="eyebrow">What it catches</p>
+        <h2>If they can send the link, that's the idea.</h2>
+        <p>Starting with the three that show up in almost every chat.</p>
+      </div>
+      <ul class="source-list">
+        <li>TikTok</li>
+        <li>Instagram Reels</li>
+        <li>YouTube Shorts</li>
+      </ul>
+      <p class="sources-note">The links can arrive from any app you already use to message people. More sources later.</p>
+    </section>
+
+    <section class="faq" id="faq">
+      <div class="section-head">
+        <p class="eyebrow">A few things worth knowing</p>
+        <h2>Questions, answered plainly.</h2>
+      </div>
+      <dl class="faq-list">
+        <div>
+          <dt>Does this leave my phone?</dt>
+          <dd>SeeLater keeps your queue on your device. We don't need a cloud account to show you what you were sent.</dd>
+        </div>
+        <div>
+          <dt>Which apps does it work with?</dt>
+          <dd>TikTok, Instagram Reels, and YouTube Shorts to start. The links themselves can come from Messages or any other chat you already use.</dd>
+        </div>
+        <div>
+          <dt>What does it cost?</dt>
+          <dd>The price will be on the App Store listing. We won't invent one here, and nothing is charged from this page.</dd>
+        </div>
+        <div>
+          <dt>Which phones does it work on?</dt>
+          <dd>iPhone, for now. SeeLater is iOS-only.</dd>
+        </div>
+      </dl>
+    </section>
+
+    <section class="close">
+      <h2>The next pile is already on its way.</h2>
+      <p>Download SeeLater on iPhone and watch the whole stack in one scroll.</p>
+      <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
+      <a class="store-badge" href="#">
+        <img src="assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
+      </a>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <a class="brand" href="#top">
+      <img src="assets/img/icon.svg" width="28" height="28" alt="">
+      <span>SeeLater</span>
+    </a>
+    <p>Every video they send you, in one place.</p>
+    <p class="legal"><span>seelater.app</span> · © 2026 SeeLater</p>
+  </footer>
+
+</body>
+</html>

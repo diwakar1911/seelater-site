@@ -1,0 +1,40 @@
+SeeLater problem-demo stock clips
+All video clips below are used under the Pexels License
+(https://www.pexels.com/license/): free to use for commercial and
+non-commercial purposes, including in advertising. No permission
+needed; attribution is not required but is given here for clarity.
+These are not endorsed by Pexels or the photographers.
+
+Used in media/demo_problem_v4.mp4 and in site/assets/vid/:
+
+  tt.mp4 / tt.jpg / tt-card.jpg
+    Pexels video 6869665
+    Title: A Cat Licking The Crystal Glass On Top Of The Table
+    Photographer: cottonbro studio
+    https://www.pexels.com/video/a-cat-licking-the-crystal-glass-on-top-of-the-table-6869665/
+    Cropped to 9:16 and trimmed for the in-app player.
+
+  reels.mp4 / reels.jpg / reels-card.jpg
+    Pexels video 12109326
+    Title: Close up of Kittens Playing near Plants
+    Photographer: Anna Bondarenko
+    https://www.pexels.com/video/close-up-of-kittens-playing-near-plants-12109326/
+    Scaled to 9:16 and trimmed for the in-app player.
+
+  shorts.mp4 / shorts.jpg / shorts-card.jpg
+    Pexels video 854413
+    Close-up of a black cat (Pexels / Pixabay collection)
+    https://www.pexels.com/video/854413/
+    Cropped from landscape to 9:16 (face) and trimmed for the in-app player.
+
+Portrait still of the iMessage contact (Her) remains Pexels 1239291,
+as noted in assets/vid/NOTICE.txt. Earlier problem-demo clips
+(Pexels 4540398, 7502788, 4434242) were replaced by the cat clips above.
+
+Wallpaper (assets/img/wall.jpg), used as the iOS lock, home, and
+App Switcher background in media/demo_problem_v5.mp4:
+  Original abstract mesh-gradient artwork created for SeeLater.
+  Not a third-party photograph and not an official Apple wallpaper.
+  The previous night-sky mountain still (Pexels, archived as
+  assets/img/wall-night.jpg) is no longer used in the live demo.
+
