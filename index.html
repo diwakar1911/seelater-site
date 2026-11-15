@@ -95,10 +95,9 @@
                   poster="media/poster_problem_v5.jpg"
                   autoplay
                   muted
-                  loop
                   playsinline
                   webkit-playsinline
-                  preload="metadata"
+                  preload="auto"
                   aria-label="Screen recording of jumping between Messages, TikTok, Instagram, and YouTube to watch videos someone sent."
                 ></video>
               </div>
@@ -112,7 +111,7 @@
           </span>
         </div>
 
-        <figure class="phone phone-after phone-placeholder" aria-hidden="true">
+        <figure class="phone phone-after">
           <div class="phone-tag">
             <span class="phone-pill phone-pill-after">
               <img src="assets/img/icon.svg" width="16" height="16" alt="">
@@ -121,13 +120,25 @@
             <p class="phone-cap">1 app, 0 switches</p>
           </div>
           <div class="phone-body">
-            <span class="phone-btn phone-btn-silent"></span>
-            <span class="phone-btn phone-btn-vol-up"></span>
-            <span class="phone-btn phone-btn-vol-down"></span>
-            <span class="phone-btn phone-btn-power"></span>
-            <span class="phone-btn phone-btn-camera"></span>
+            <span class="phone-btn phone-btn-silent" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-vol-up" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-vol-down" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-power" aria-hidden="true"></span>
+            <span class="phone-btn phone-btn-camera" aria-hidden="true"></span>
             <div class="phone-bezel">
-              <div class="phone-screen"></div>
+              <div class="phone-screen">
+                <video
+                  class="phone-video"
+                  src="media/demo_after_v2.mp4"
+                  poster="media/poster_after_v2.jpg"
+                  autoplay
+                  muted
+                  playsinline
+                  webkit-playsinline
+                  preload="auto"
+                  aria-label="Screen recording of opening SeeLater from a Messages notification and watching every saved video in one feed."
+                ></video>
+              </div>
             </div>
           </div>
         </figure>
@@ -354,5 +365,6 @@
     <p class="legal"><span>seelater.app</span> · © 2026 SeeLater</p>
   </footer>
 
+  <script src="assets/hero-sync.js" defer></script>
 </body>
 </html>

@@ -347,6 +347,7 @@ h3 { line-height: 1.2; }
    Do not draw a second CSS island on the bezel — it would stack
    on top of the one in the video. */
 .phone-before .phone-island,
+.phone-after .phone-island,
 .phone-screen > .phone-island { display: none; }
 
 .phone-video {
