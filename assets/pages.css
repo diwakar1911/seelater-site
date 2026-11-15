@@ -1,0 +1,106 @@
+/* SeeLater legal and support pages */
+
+.page {
+  width: min(42rem, calc(100% - 40px));
+  margin-inline: auto;
+  padding: 36px 0 80px;
+}
+
+.page-title {
+  margin: 0 0 10px;
+  font-size: clamp(2rem, 6.2vw, 2.85rem);
+}
+
+.page-lede {
+  margin: 0 0 28px;
+  color: var(--cream-70);
+  font-size: 1.125rem;
+}
+
+.page-date {
+  margin: 0 0 8px;
+  font-size: 0.9375rem;
+  color: var(--cream-55);
+}
+
+.page h2 {
+  margin: 2.35rem 0 0.8rem;
+  font-size: clamp(1.25rem, 3vw, 1.5rem);
+  letter-spacing: -0.03em;
+}
+
+.page h3 {
+  margin: 1.65rem 0 0.5rem;
+  font-size: 1.0625rem;
+  letter-spacing: -0.02em;
+}
+
+.page p { margin: 0 0 1rem; }
+
+.page ul,
+.page ol {
+  margin: 0 0 1.05rem;
+  padding-left: 1.3rem;
+}
+
+.page li { margin: 0 0 0.45rem; }
+.page li:last-child { margin-bottom: 0; }
+
+.page a:not(.brand):not(.store-badge) {
+  color: var(--mint-text);
+  text-underline-offset: 0.16em;
+  text-decoration-thickness: 1px;
+}
+
+.page a:not(.brand):not(.store-badge):hover { color: var(--ink); }
+
+.page a:focus-visible {
+  outline: 2px solid var(--mint-text);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+.callout {
+  margin: 1.5rem 0 2.1rem;
+  padding: 1.15rem 1.25rem 1.05rem;
+  background: var(--bg-elev);
+  border: 1px solid var(--cream-10);
+  border-radius: 16px;
+  box-shadow: var(--shadow);
+}
+
+.callout h2 { margin-top: 0; }
+.callout ul { margin-bottom: 0; }
+
+.page hr {
+  border: 0;
+  border-top: 1px solid var(--cream-10);
+  margin: 2.4rem 0;
+}
+
+.foot .legal a {
+  color: inherit;
+  text-underline-offset: 0.15em;
+}
+
+.foot .legal a:hover { color: var(--cream); }
+
+@media (min-width: 860px) {
+  .page { padding: 48px 0 96px; }
+}
+
+@media (max-width: 430px) {
+  .page {
+    width: min(42rem, calc(100% - 32px));
+    padding-top: 28px;
+    padding-bottom: 64px;
+  }
+
+  .page-lede { font-size: 1.0625rem; }
+}
+
+.page,
+.page a {
+  overflow-wrap: anywhere;
+  word-break: break-word;
+}
