@@ -12,6 +12,7 @@
   var playIc = playBtn ? playBtn.querySelector(".loop-scrub-ic-play") : null;
   var pauseIc = playBtn ? playBtn.querySelector(".loop-scrub-ic-pause") : null;
   var ticks = Array.prototype.slice.call(root.querySelectorAll(".loop-scrub-tick"));
+  var timeEl = document.getElementById("loopScrubTime");
   var steps = Array.prototype.slice.call(section.querySelectorAll(".hop-step"));
 
   var wasPlaying = false;
@@ -43,6 +44,13 @@
     return s + (s === 1 ? " second" : " seconds");
   }
 
+  function formatClock(t) {
+    var s = Math.max(0, Math.floor(t + 0.0001));
+    var m = Math.floor(s / 60);
+    s = s % 60;
+    return m + ":" + (s < 10 ? "0" : "") + s;
+  }
+
   function stepLabel(t) {
     var match = null;
     steps.forEach(function (step) {
@@ -72,6 +80,8 @@
     var text = formatTime(t) + (label ? ", " + label : "");
     range.setAttribute("aria-valuenow", String(Math.round(t * 10) / 10));
     range.setAttribute("aria-valuetext", text);
+    if (timeEl) timeEl.textContent = formatClock(t);
+    root.classList.toggle("is-dragging", dragging);
     var currentStart = -1;
     ticks.forEach(function (tick) {
       var start = parseFloat(tick.getAttribute("data-start"));
