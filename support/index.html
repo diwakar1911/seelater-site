@@ -19,10 +19,16 @@
       <img src="/assets/img/icon.svg" width="32" height="32" alt="">
       <span>SeeLater</span>
     </a>
-    <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
-    <a class="store-badge store-badge-nav" href="#">
-      <img src="/assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
-    </a>
+    <div class="nav-end">
+      <a class="nav-link" href="/setup/">
+        <span class="nav-link-short">Setup</span>
+        <span class="nav-link-full">Set up the Shortcut</span>
+      </a>
+      <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
+      <a class="store-badge store-badge-nav" href="#">
+        <img src="/assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
+      </a>
+    </div>
   </header>
 
   <main id="main" class="page">
@@ -32,7 +38,7 @@
     <h2>FAQ</h2>
 
     <h3>How do I set up automatic saving from Messages?</h3>
-    <p>SeeLater can save TikTok, Instagram Reel and YouTube Shorts links people text you, automatically, using a one-time automation in Apple's Shortcuts app. The app walks you through it with pictures:</p>
+    <p>SeeLater can save TikTok, Instagram Reel and YouTube links people text you, automatically, using a one-time automation in Apple's Shortcuts app. The app walks you through it with pictures:</p>
     <ol>
       <li>Open SeeLater and tap <strong>Set up automatic saving</strong>.</li>
       <li>Scroll to the bottom and tap <strong>Install Shortcut</strong>, then tap <strong>Add Shortcut</strong>.</li>
@@ -41,17 +47,17 @@
       <li>Make sure it runs without asking: <strong>Run Immediately</strong> on, or <strong>Confirm Before Run</strong> off, depending on your iOS version.</li>
       <li>Test it: when someone texts you a TikTok, Reel or Shorts link, it appears in SeeLater.</li>
     </ol>
-    <p>The automation only runs for messages that contain a TikTok, Instagram Reel, YouTube Shorts or youtu.be link. Other messages are left alone. Menu names can differ slightly between iOS versions; the in-app guide shows the current screens.</p>
+    <p>The automation checks messages that contain a web link, on your iPhone, and passes only supported video links (and the sender) to SeeLater. Other links and the rest of the conversation are never passed to SeeLater. Because it checks any message with a link, Shortcuts may show a notification even when nothing was saved (see "quiet the Shortcuts notifications" below). Menu names can differ slightly between iOS versions; the in-app guide shows the current screens.</p>
 
     <h3>How do I save a video with Share → SeeLater?</h3>
-    <p>In TikTok, Instagram, YouTube, Messages, Safari or almost any app, tap <strong>Share</strong> on the video or link, then choose <strong>SeeLater</strong>. You can add who it's from, then tap <strong>Save</strong>.</p>
+    <p>In TikTok, Instagram, YouTube, Messages, Safari or almost any app, tap <strong>Share</strong> on the video or link, then choose <strong>SeeLater</strong> and tap <strong>Save</strong>. The video appears the next time you open SeeLater, under <strong>Unassigned</strong>.</p>
     <ul>
       <li>Instagram: tap the paper-plane (Share) button, then <strong>Share to…</strong> (or the share/more option), then <strong>SeeLater</strong>.</li>
       <li>TikTok: tap <strong>Share</strong>, then <strong>More</strong> or <strong>Other</strong>, then <strong>SeeLater</strong>.</li>
     </ul>
 
     <h3>Can I add a link by hand, or try the app first?</h3>
-    <p>Yes. Tap <strong>Add link</strong>, paste a TikTok, Instagram Reel or YouTube Shorts link, optionally add who sent it, and save. To see how the app works right away, tap <strong>Try sample videos</strong> to load a few example videos. You can remove them like any other video.</p>
+    <p>Yes. Tap <strong>Paste a video link</strong> (on the empty feed, or in Settings → Add videos), paste one or more TikTok, Instagram Reel or YouTube links, and tap <strong>Save</strong>. No Shortcut setup is needed. Pasted videos appear under <strong>Unassigned</strong>.</p>
 
     <h3>Why won't a video play?</h3>
     <p>SeeLater plays videos in each platform's official embedded player and never downloads them. A video may not play if:</p>
@@ -67,7 +73,7 @@
     <p>iOS may show a small Shortcuts notification each time a video is saved. To hide these alerts, open SeeLater → Settings → <strong>Optional: quiet Shortcuts notifications</strong>, which shows each step with pictures. In short: open the iPhone <strong>Settings</strong> app, find <strong>Shortcuts</strong> in your notification activity list (tap <strong>Show More</strong> until it appears), and turn off the alert styles you don't want. <strong>Keep "Allow Notifications" on for Shortcuts</strong>, or automatic saving may stop working.</p>
 
     <h3>How do I delete my data?</h3>
-    <p>Everything SeeLater saves stays on your iPhone. Remove a single video from your feed in the app, or delete the SeeLater app to erase everything. To stop automatic saving, turn off or delete the <strong>Save to SeeLater</strong> automation in Shortcuts. See our <a href="/privacy">Privacy Policy</a> for details.</p>
+    <p>Everything SeeLater saves stays on your iPhone. To remove a single video, tap the trash icon under it and confirm <strong>Delete video</strong>. To erase everything, delete the SeeLater app. To stop automatic saving, turn off or delete the <strong>Save to SeeLater</strong> automation in Shortcuts. See our <a href="/privacy">Privacy Policy</a> for details.</p>
 
     <hr>
 
@@ -78,7 +84,7 @@
       <li><strong>Is the automation on?</strong> Open Shortcuts → <strong>Automation</strong> and check that the Save to SeeLater automation is turned on. New automations import switched <strong>off</strong>.</li>
       <li><strong>Is Run Immediately on?</strong> If the automation is set to ask first ("Run After Confirmation" or <strong>Confirm Before Run</strong> on), iOS waits for you to tap a notification before anything is saved. Switch it to run immediately.</li>
       <li><strong>Are Shortcuts notifications allowed?</strong> Settings → Notifications → Shortcuts → <strong>Allow Notifications</strong> must stay on.</li>
-      <li><strong>Does the message contain a supported link?</strong> It only fires for links containing tiktok.com, instagram.com/reel, youtube.com/shorts or youtu.be. Regular YouTube videos, Instagram photo posts or links shortened by other services won't trigger it. Use Share → SeeLater or Add link for those.</li>
+      <li><strong>Does the message contain a supported link?</strong> Supported: TikTok video links (including short links), Instagram Reel links, and YouTube Shorts, youtu.be and youtube.com/watch links. Instagram photo posts, profiles and links shortened by other services aren't saved. Use Share → SeeLater or Paste a video link for those.</li>
       <li><strong>Did you reinstall the shortcut?</strong> If you reinstalled the shortcut or SeeLater, delete the old automation and set it up again from <strong>Set up automatic saving</strong>.</li>
       <li><strong>Is the shortcut up to date?</strong> Install the latest Save to SeeLater shortcut from inside the app.</li>
     </ul>
@@ -87,17 +93,17 @@
     <ul>
       <li>Swipe the row of app icons in the share sheet to the end, tap <strong>More</strong>, and turn on (or favorite) <strong>SeeLater</strong>.</li>
       <li>Open SeeLater once after installing or updating. iOS sometimes needs that before the share option appears.</li>
-      <li>Some apps only show their own share options. Use <strong>Copy link</strong> there, then paste it into SeeLater's <strong>Add link</strong>.</li>
+      <li>Some apps only show their own share options. Use <strong>Copy link</strong> there, then use <strong>Paste a video link</strong> in SeeLater.</li>
       <li>Still missing? Restart your iPhone and try again.</li>
     </ul>
 
     <h3>A link was saved twice</h3>
-    <p>SeeLater skips duplicates from the same sender. The <strong>same video from two different people</strong> shows up once in each person's queue, so you know both sent it. If two entries come from the same person, one was probably saved under a number and the other under a name (for example, once by the automation and once by Share). Remove the extra one and email us if it keeps happening.</p>
+    <p>SeeLater skips duplicates from the same sender. The <strong>same video from two different people</strong> shows up once in each person's queue, so you know both sent it. A video saved by Share or Paste lands in <strong>Unassigned</strong>, so it can also appear in the sender's queue if the automation saved it too. Delete the extra one with the trash icon, and email us if it keeps happening.</p>
 
     <h3>The sender shows as a number, or as unknown</h3>
     <ul>
       <li>The Messages automation passes the sender's <strong>phone number or email</strong>. To see names instead, allow <strong>Contacts</strong> access when SeeLater asks, or later in Settings → Privacy &amp; Security → Contacts. Matching happens on your iPhone, and the number is shown if there's no clear match.</li>
-      <li>Videos saved with <strong>Share</strong> or <strong>Add link</strong> without a "From" name, or saved before sender info existed, appear under <strong>Unassigned</strong>.</li>
+      <li>Videos saved with <strong>Share</strong> or <strong>Paste a video link</strong> don't have a sender, so they appear under <strong>Unassigned</strong>.</li>
     </ul>
 
     <hr>
@@ -113,7 +119,7 @@
       <span>SeeLater</span>
     </a>
     <p>Every video they send you, in one place.</p>
-    <p class="legal"><a href="/privacy">Privacy</a> · <a href="/support">Support</a></p>
+    <p class="legal"><a href="/setup/">Setup</a> · <a href="/privacy">Privacy</a> · <a href="/support">Support</a></p>
     <p class="legal"><span>seelater.app</span> · © 2026 SeeLater</p>
   </footer>
 

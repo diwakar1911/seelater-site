@@ -19,10 +19,16 @@
       <img src="/assets/img/icon.svg" width="32" height="32" alt="">
       <span>SeeLater</span>
     </a>
-    <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
-    <a class="store-badge store-badge-nav" href="#">
-      <img src="/assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
-    </a>
+    <div class="nav-end">
+      <a class="nav-link" href="/setup/">
+        <span class="nav-link-short">Setup</span>
+        <span class="nav-link-full">Set up the Shortcut</span>
+      </a>
+      <!-- TODO: replace href="#" with the App Store URL once the listing is live. -->
+      <a class="store-badge store-badge-nav" href="#">
+        <img src="/assets/img/download-on-the-app-store.svg" width="120" height="40" alt="Download on the App Store">
+      </a>
+    </div>
   </header>
 
   <main id="main" class="page">
@@ -55,13 +61,13 @@
     <h2>Automatic saving from Messages (optional)</h2>
     <p>If you choose to set it up, SeeLater uses an automation in Apple's Shortcuts app that <strong>you</strong> install and turn on. SeeLater can't read your Messages on its own.</p>
     <ul>
-      <li>The automation only runs for incoming messages that contain a TikTok, Instagram Reel, YouTube Shorts or youtu.be link.</li>
-      <li>When it runs, it passes that message's link and the sender to SeeLater on your iPhone. SeeLater keeps the supported video link and the sender, and ignores everything else.</li>
+      <li>The automation checks incoming messages that contain a web link, on your iPhone. If the message contains a supported TikTok, Instagram Reel or YouTube link, it passes only that link and the sender to SeeLater. Other messages, and the rest of the conversation text, are not passed to SeeLater.</li>
+      <li>SeeLater keeps the supported video link and the sender, and ignores everything else.</li>
       <li>You can turn the automation off or delete it in the Shortcuts app at any time.</li>
     </ul>
 
     <h2>Share → SeeLater and Add link</h2>
-    <p>When you share a link to SeeLater from another app, or paste one into Add link, SeeLater saves the video link and any "From" name you enter. Everything stays on your iPhone.</p>
+    <p>When you share a link to SeeLater from another app, or paste one with <strong>Paste a video link</strong>, SeeLater saves the video link. Everything stays on your iPhone. (Shared and pasted videos appear under <strong>Unassigned</strong>, since there's no sender.)</p>
 
     <h2>Contacts (optional)</h2>
     <p>If you allow Contacts access, SeeLater matches a sender's phone number or email to a name in your contacts so you see "Sam" instead of a number. The matching happens <strong>on your iPhone only</strong>. SeeLater keeps just the matched name next to that sender and never uploads your contacts. If you don't allow access, or you turn it off later in <strong>Settings → Privacy &amp; Security → Contacts</strong>, SeeLater shows the original phone number or email instead.</p>
@@ -80,6 +86,7 @@
       <li>Instagram / Meta: <a href="https://privacycenter.instagram.com/policy">https://privacycenter.instagram.com/policy</a></li>
     </ul>
     <p>We don't receive any information from these players. If you tap "Open in TikTok/Instagram/YouTube," the video opens in that app or website, under its own policy.</p>
+    <p>Some shared links are short links (for example a TikTok short link). To find the actual video, SeeLater may send a simple request to that same link on the platform's site, the way a browser would. That request goes to the platform, not to us.</p>
 
     <h2>Apple</h2>
     <p>You download SeeLater from the App Store, and automatic saving runs in Apple's Shortcuts app. Apple's privacy policy applies to those: <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></p>
@@ -92,7 +99,8 @@
     <h2>Deleting your data</h2>
     <p>Your data is on your iPhone, so you're in control of it:</p>
     <ul>
-      <li><strong>Remove one video:</strong> remove it from your feed in the app.</li>
+      <li><strong>Remove one video:</strong> tap the trash icon under the video and confirm <strong>Delete video</strong>.</li>
+      <li><strong>Automatic limit:</strong> SeeLater keeps the newest 100 videos by default (you can change this in Settings). When the limit is reached, the oldest saves are removed.</li>
       <li><strong>Delete everything:</strong> delete the SeeLater app. This deletes its saved links, senders, contact names and settings from your iPhone. Copies in older iPhone backups are kept or deleted under your backup settings.</li>
       <li><strong>Stop automatic saving:</strong> turn off or delete the "Save to SeeLater" automation in the Shortcuts app.</li>
       <li><strong>Revoke Contacts access:</strong> Settings → Privacy &amp; Security → Contacts → SeeLater.</li>
@@ -116,7 +124,7 @@
       <span>SeeLater</span>
     </a>
     <p>Every video they send you, in one place.</p>
-    <p class="legal"><a href="/privacy">Privacy</a> · <a href="/support">Support</a></p>
+    <p class="legal"><a href="/setup/">Setup</a> · <a href="/privacy">Privacy</a> · <a href="/support">Support</a></p>
     <p class="legal"><span>seelater.app</span> · © 2026 SeeLater</p>
   </footer>
 
