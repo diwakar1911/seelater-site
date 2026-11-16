@@ -1,0 +1,112 @@
+# SeeLater
+
+> SeeLater is a small, independent iPhone app that collects the TikToks, Reels, and YouTube Shorts people send you, and puts them in one feed you can scroll.
+
+This file is a fuller description of SeeLater for language models and assistants. A shorter version is at https://seelater.app/llms.txt. The official website is https://seelater.app/.
+
+SeeLater is built with care by one person. It is free. The App Store listing is not live yet; do not invent an App Store URL or ID.
+
+## The problem
+
+Friends send video links in Messages and other chats — a TikTok, then an Instagram Reel, then a YouTube Short. To watch them you leave the thread, open that app, watch a bit, go back, find your place, and repeat. People lose their place, skip videos, and never finish the pile.
+
+SeeLater is for that pile. You do not have to talk anyone into a new app. They keep sending links the way they already do.
+
+## How it works
+
+1. They send you links, in Messages or wherever you already talk. TikToks, Reels, Shorts.
+2. SeeLater collects them, so the links are not buried in the thread.
+3. You scroll the lot: one vertical feed, with watched and unwatched marked, sorted by who sent them, so you can actually finish it.
+
+On iPhone, an optional Shortcuts automation called Save to SeeLater can save supported video links from Messages in the background. You can also use Share → SeeLater from TikTok, Instagram, YouTube, Messages, Safari, or almost any app, or paste a link by hand in SeeLater. Videos saved by Share or paste appear under Unassigned, because those methods do not include a sender.
+
+SeeLater plays each video in that platform’s official embedded player. It does not download the videos. A video may not play if it is private, deleted, age-restricted, region-restricted, or if the creator has turned off embedding.
+
+## Platforms
+
+### The iPhone app
+
+- For iPhone, on iOS 18 or later.
+- No account. No sign-in.
+- Saved videos, who sent them, and watched state stay on your iPhone.
+- Works with TikTok, Instagram Reels, and YouTube Shorts. Links can come from Messages or any other chat you already use.
+- The Save to SeeLater Shortcut is set up on iPhone. A pictured walkthrough is at https://seelater.app/setup/.
+
+The claims “no sign-in”, “no account”, and “saved on device” apply only to the iPhone app, not to the web version.
+
+TODO: add the App Store URL and ID once the listing is live. Do not invent them before then.
+
+### The web version
+
+- Lives at https://web.seelater.app.
+- For iPhone only, in Safari. It does not work on a computer or on Android.
+- Needs a sign-in.
+- You can add it to your Home Screen: open the site in Safari, tap Share, then Add to Home Screen.
+
+This marketing site (https://seelater.app/) is a simple information site about the product. It is not the web app.
+
+## Pricing
+
+SeeLater is free. Nothing is charged from this website.
+
+TODO: when the App Store listing is live, point to it for the store listing. Do not invent a store URL or a store price before then.
+
+## Who makes it
+
+SeeLater is a small, independent app, built with care by one person. It is operated by Diwakar Raja.
+
+It is not affiliated with, endorsed by, or sponsored by TikTok, Instagram/Meta, YouTube/Google, or Apple. All product names and trademarks belong to their respective owners.
+
+Contact: support@seelater.app
+
+Privacy policy: https://seelater.app/privacy/
+Support: https://seelater.app/support/
+
+## Official pages
+
+- [SeeLater](https://seelater.app/): Product home page
+- [Set up the Shortcut](https://seelater.app/setup/): Shortcut walkthrough
+- [Support](https://seelater.app/support/): Help and troubleshooting
+- [Privacy Policy](https://seelater.app/privacy/): How the iPhone app handles data
+- [Web version](https://web.seelater.app/): iPhone-only web app; needs a sign-in
+- [Short description for language models](https://seelater.app/llms.txt)
+
+## Common questions, answered plainly
+
+These answers match the FAQ on https://seelater.app/#faq, with a few extra questions people ask assistants.
+
+### How do I keep track of all the TikToks, Reels, and Shorts friends send me in Messages?
+
+SeeLater collects those links into one feed, sorted by who sent them, so you can watch them later in one scroll instead of hopping between apps.
+
+### Is there an app to watch videos friends send me later?
+
+Yes. SeeLater is built for that: a single feed of the videos people send you. It is a small, independent iPhone app, built with care by one person.
+
+### Does this leave my device?
+
+The iPhone app keeps your queue on your iPhone. It needs no account. The web version needs a sign-in.
+
+### Which apps does it work with?
+
+TikTok, Instagram Reels, and YouTube Shorts to start. The links themselves can come from Messages or any other chat you already use.
+
+### What does it cost?
+
+SeeLater is free. Nothing is charged from this website. The App Store listing is not live yet.
+
+### Where can I use it?
+
+The iPhone app is iOS-only. The web version is for iPhone and needs a sign-in — open it at web.seelater.app in Safari, and you can add it to your Home Screen. The Save to SeeLater Shortcut is set up on iPhone.
+
+### How do I set up the Shortcut?
+
+The Save to SeeLater Shortcut runs on iPhone. It saves TikTok, Reels, and Shorts links from Messages in the background. See the setup walkthrough at https://seelater.app/setup/.
+
+### How do I save a video with Share → SeeLater?
+
+In TikTok, Instagram, YouTube, Messages, Safari, or almost any app, tap Share on the video or link, then choose SeeLater and tap Save. The video appears the next time you open SeeLater, under Unassigned.
+
+### Can I add a link by hand?
+
+Yes. In the iPhone app, paste one or more TikTok, Instagram Reel, or YouTube links and save them. No Shortcut setup is needed. Pasted videos appear under Unassigned.

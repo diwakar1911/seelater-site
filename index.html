@@ -6,9 +6,141 @@
   <title>SeeLater: all the videos they send you, in one scroll</title>
   <meta name="description" content="SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.">
   <meta name="theme-color" content="#FEF6EC">
-  <link rel="icon" type="image/png" sizes="32x32" href="assets/img/favicon-32.png">
-  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="canonical" href="https://seelater.app/">
+  <link rel="icon" href="/favicon.ico" sizes="any">
+  <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicon-32.png">
+  <link rel="apple-touch-icon" href="/assets/img/apple-touch-icon.png">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="SeeLater">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:title" content="SeeLater: all the videos they send you, in one scroll">
+  <meta property="og:description" content="SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.">
+  <meta property="og:url" content="https://seelater.app/">
+  <meta property="og:image" content="https://seelater.app/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:type" content="image/png">
+  <meta property="og:image:alt" content="SeeLater: all the videos they send you, in one scroll. A phone showing the SeeLater feed.">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SeeLater: all the videos they send you, in one scroll">
+  <meta name="twitter:description" content="SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.">
+  <meta name="twitter:image" content="https://seelater.app/assets/img/og.png">
+  <meta name="twitter:image:alt" content="SeeLater: all the videos they send you, in one scroll. A phone showing the SeeLater feed.">
   <link rel="stylesheet" href="assets/styles.css">
+  <!-- TODO: add "installUrl" (and the App Store ID) to the SoftwareApplication JSON-LD once the App Store listing is live. Do not invent a URL or ID before then. -->
+  <script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://seelater.app/#organization",
+      "name": "SeeLater",
+      "url": "https://seelater.app/",
+      "email": "support@seelater.app",
+      "founder": {
+        "@type": "Person",
+        "name": "Diwakar Raja"
+      },
+      "logo": "https://seelater.app/assets/img/icon.svg",
+      "description": "A small, independent app, built with care by one person."
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://seelater.app/#website",
+      "name": "SeeLater",
+      "url": "https://seelater.app/",
+      "description": "SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.",
+      "inLanguage": "en",
+      "publisher": {
+        "@id": "https://seelater.app/#organization"
+      }
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://seelater.app/#webpage",
+      "url": "https://seelater.app/",
+      "name": "SeeLater: all the videos they send you, in one scroll",
+      "description": "SeeLater collects the TikToks, Reels, and YouTube Shorts people send you, so you can watch them in one feed instead of hopping in and out of apps.",
+      "isPartOf": {
+        "@id": "https://seelater.app/#website"
+      },
+      "about": {
+        "@id": "https://seelater.app/#app"
+      },
+      "primaryImageOfPage": "https://seelater.app/assets/img/og.png"
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://seelater.app/#app",
+      "name": "SeeLater",
+      "url": "https://seelater.app/",
+      "applicationCategory": "EntertainmentApplication",
+      "operatingSystem": "iOS 18+",
+      "description": "SeeLater collects the TikToks, Reels, and YouTube Shorts people send you and puts them in one feed, sorted by who sent them, with a watched count. The iPhone app needs no account and keeps your queue on your iPhone. The web version at web.seelater.app is for iPhone and needs a sign-in.",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      },
+      "publisher": {
+        "@id": "https://seelater.app/#organization"
+      },
+      "image": "https://seelater.app/assets/img/og.png"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://seelater.app/#faq",
+      "url": "https://seelater.app/#faq",
+      "isPartOf": {
+        "@id": "https://seelater.app/#webpage"
+      },
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "Does this leave my device?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The iPhone app keeps your queue on your iPhone. It needs no account. The web version needs a sign-in."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Which apps does it work with?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "TikTok, Instagram Reels, and YouTube Shorts to start. The links themselves can come from Messages or any other chat you already use."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "What does it cost?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The price will be on the App Store listing. We won't invent one here, and nothing is charged from this page."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "Where can I use it?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The iPhone app is iOS-only. The web version is for iPhone and needs a sign-in — open it at web.seelater.app in Safari, and you can add it to your Home Screen. The Save to SeeLater Shortcut is set up on iPhone."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I set up the Shortcut?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "The Save to SeeLater Shortcut runs on iPhone. It saves TikTok, Reels, and Shorts links from Messages in the background. See the setup walkthrough at https://seelater.app/setup/."
+          }
+        }
+      ]
+    }
+  ]
+}
+  </script>
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -821,6 +953,7 @@
       <span>SeeLater</span>
     </a>
     <p>Every video they send you, in one place.</p>
+    <p class="made-by">SeeLater is built by a small independent developer, with care.</p>
     <p class="legal"><a href="/setup/">Set up the Shortcut</a> · <a href="/privacy">Privacy</a> · <a href="/support">Support</a></p>
     <p class="legal"><span>seelater.app</span> · © 2026 SeeLater</p>
   </footer>
