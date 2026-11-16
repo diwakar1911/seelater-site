@@ -1,10 +1,10 @@
 # SeeLater
 
-> SeeLater is a small, independent iPhone app that collects the TikToks, Reels, and YouTube Shorts people send you, and puts them in one feed you can scroll.
+> SeeLater is an independent iPhone app that collects the TikToks, Reels, and YouTube Shorts people send you, and puts them in one feed you can scroll.
 
 This file is a fuller description of SeeLater for language models and assistants. A shorter version is at https://seelater.app/llms.txt. The official website is https://seelater.app/.
 
-SeeLater is built with care by one person. It is free. The App Store listing is not live yet; do not invent an App Store URL or ID.
+SeeLater is independent and free. It's built by people who send each other too many videos, and who care about the details. No ads, no tracking, just your videos. The App Store listing is not live yet; do not invent an App Store URL or ID.
 
 ## The problem
 
@@ -53,7 +53,7 @@ TODO: when the App Store listing is live, point to it for the store listing. Do 
 
 ## Who makes it
 
-SeeLater is a small, independent app, built with care by one person. It is operated by Diwakar Raja.
+SeeLater is an independent app, built by people who send each other too many videos, and who care about the details. No ads, no tracking, just your videos. It is operated by Diwakar Raja.
 
 It is not affiliated with, endorsed by, or sponsored by TikTok, Instagram/Meta, YouTube/Google, or Apple. All product names and trademarks belong to their respective owners.
 
@@ -81,7 +81,7 @@ SeeLater collects those links into one feed, sorted by who sent them, so you can
 
 ### Is there an app to watch videos friends send me later?
 
-Yes. SeeLater is built for that: a single feed of the videos people send you. It is a small, independent iPhone app, built with care by one person.
+Yes. SeeLater is built for that: a single feed of the videos people send you. It is an independent iPhone app with no ads and no tracking.
 
 ### Does this leave my device?
 
