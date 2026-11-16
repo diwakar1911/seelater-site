@@ -34,15 +34,15 @@
   <main id="main" class="page">
     <p class="page-date">Effective date: November 15, 2026</p>
     <h1 class="page-title">SeeLater Privacy Policy</h1>
-    <p class="page-lede">SeeLater is operated by Diwakar Raja ("SeeLater", "we", "us"). This policy explains what the SeeLater iPhone app and the seelater.app marketing website do with your information. It does not describe the web version at web.seelater.app. The short version for the iPhone app: <strong>your saved videos stay on your iPhone, and we don't collect them.</strong></p>
+    <p class="page-lede">SeeLater is operated by Diwakar Raja ("SeeLater", "we", "us"). This policy explains what the SeeLater iPhone app and the seelater.app marketing website do with your information. The web version at web.seelater.app has a separate signed-in inbox. <strong>The native iPhone app stores its queue locally.</strong> If you separately connect the shared Shortcut to a web inbox, the Shortcut also sends supported links and sender details to that inbox, as described below.</p>
 
     <div class="callout">
       <h2>The short version</h2>
       <ul>
         <li>The iPhone app needs no account and no sign-up.</li>
-        <li>No analytics, no ads, no tracking, and no servers of our own that receive your data.</li>
-        <li>The video links you save, who sent them, and what you've watched are stored <strong>only on your iPhone</strong>.</li>
-        <li>Contacts access is optional, and contact matching happens <strong>on your iPhone only</strong>.</li>
+        <li>The native app has no SeeLater analytics or advertising SDK. Embedded video services may collect technical and playback data under their own policies.</li>
+        <li>The native app stores saved links, sender details and watched progress <strong>on your iPhone</strong>. A separately connected web inbox stores its own copy of links and sender details.</li>
+        <li>The Shortcut may look up a sender in Contacts on your iPhone and pass the matched name with the link. You can also save a name manually.</li>
         <li>Videos play in the official TikTok, YouTube and Instagram players, which load from those companies.</li>
       </ul>
     </div>
@@ -55,7 +55,7 @@
       <li><strong>An optional contact name</strong> for that sender (see Contacts below).</li>
       <li><strong>Your activity in the app</strong>: which videos you've watched, when each one was saved, and your settings (such as autoplay).</li>
     </ul>
-    <p>This data never leaves your iPhone to reach us. We have no servers that receive it, and we can't see it. Like other app data, it can be included in your own iPhone backups (iCloud or computer), under your Apple account settings.</p>
+    <p>The native iPhone app does not upload this library to SeeLater. If you separately connect the Shortcut to SeeLater Web, the Shortcut sends supported links and sender details to your authenticated web inbox; that is a separate queue. Like other app data, it can be included in your own iPhone backups (iCloud or computer), under your Apple account settings.</p>
     <p>SeeLater never downloads, copies or stores the videos themselves. It only stores links.</p>
 
     <h2>Automatic saving from Messages (optional)</h2>
@@ -69,8 +69,10 @@
     <h2>Share → SeeLater and Add link</h2>
     <p>When you share a link to SeeLater from another app, or paste one with <strong>Paste a video link</strong>, SeeLater saves the video link. Everything stays on your iPhone. (Shared and pasted videos appear under <strong>Unassigned</strong>, since there's no sender.)</p>
 
-    <h2>Contacts (optional)</h2>
-    <p>If you allow Contacts access, SeeLater matches a sender's phone number or email to a name in your contacts so you see "Sam" instead of a number. The matching happens <strong>on your iPhone only</strong>. SeeLater keeps just the matched name next to that sender and never uploads your contacts. If you don't allow access, or you turn it off later in <strong>Settings → Privacy &amp; Security → Contacts</strong>, SeeLater shows the original phone number or email instead.</p>
+    <h2>Sender names</h2>
+    <p>The shared SeeLater Shortcut can match the incoming sender to Contacts on your iPhone and pass the matched name, phone number or email with a supported video link. It does not upload your whole address book. Apple controls Shortcuts permissions and may ask for access. SeeLater also lets you enter or edit a sender name manually in Settings. The native app does not request its own Contacts permission. A web connection sends the matched sender details to your private web inbox.</p>
+    <h2>Connecting SeeLater Web</h2>
+    <p>Web sign-in and connection are optional and separate from using the native app. When connected, our Cloudflare-hosted service stores supported video links, sender identifiers and available names, save dates, watched state and preferences for your account. Google sign-in or email-code sign-in supplies your account identifier, email and available profile name. Resend delivers email sign-in codes. The Shortcut excludes surrounding conversation text and unrelated links. Native and web watched progress do not sync. You can delete web saves and manage or revoke Shortcut connections in the web app. Contact support@seelater.app to request deletion of your web account and associated stored data. We do not sell this information or use it for targeted advertising.</p>
 
     <h2>Video players from TikTok, YouTube and Instagram</h2>
     <p>To play a video, SeeLater opens that platform's official embedded player inside the app:</p>
@@ -92,7 +94,7 @@
     <p>You download SeeLater from the App Store, and automatic saving runs in Apple's Shortcuts app. Apple's privacy policy applies to those: <a href="https://www.apple.com/legal/privacy/">https://www.apple.com/legal/privacy/</a></p>
 
     <h2>The seelater.app website</h2>
-    <p>The seelater.app marketing website is a simple information page about the iPhone app. It has no sign-up form, and we don't sell or share visitor information. This policy does not cover the web version at web.seelater.app.</p>
+    <p>The seelater.app marketing website is a simple information page about the iPhone app. It has no sign-up form, and we don't sell or share visitor information. The connected web inbox is described above.</p>
     <p>This website uses no analytics, cookies, or trackers, and fonts are served from the site itself. The site is hosted on GitHub Pages, which may log visitors' IP addresses for security and operations purposes, as described in <a href="https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement">GitHub's privacy statement</a>.</p>
     <p>If you email us, we use your email address and message only to reply and help you.</p>
 
@@ -101,11 +103,11 @@
     <ul>
       <li><strong>Remove one video:</strong> tap the trash icon under the video and confirm <strong>Delete video</strong>.</li>
       <li><strong>Automatic limit:</strong> SeeLater keeps the newest 100 videos by default (you can change this in Settings). When the limit is reached, the oldest saves are removed.</li>
-      <li><strong>Delete everything:</strong> delete the SeeLater app. This deletes its saved links, senders, contact names and settings from your iPhone. Copies in older iPhone backups are kept or deleted under your backup settings.</li>
+      <li><strong>Delete everything:</strong> use Settings → Delete all SeeLater data, or delete the app. The in-app action removes saved links, sender names, watched progress and setup state. Copies in older iPhone backups are kept or deleted under your backup settings.</li>
       <li><strong>Stop automatic saving:</strong> turn off or delete the "Save to SeeLater" automation in the Shortcuts app.</li>
-      <li><strong>Revoke Contacts access:</strong> Settings → Privacy &amp; Security → Contacts → SeeLater.</li>
+      <li><strong>Shortcut access:</strong> manage the Shortcut and its permissions in Shortcuts. Deleting native data does not delete a separately connected web inbox.</li>
     </ul>
-    <p>The iPhone app doesn't send us a copy of your library, so there's nothing for us to delete on our side from the app. If you've emailed us and want that conversation deleted, ask at <a href="mailto:support@seelater.app">support@seelater.app</a>.</p>
+    <p>The native app does not send us a copy of its library. A connected web inbox is separate: removing the native app or its data does not remove web data; contact us for web account deletion. If you've emailed us and want that conversation deleted, ask at <a href="mailto:support@seelater.app">support@seelater.app</a>.</p>
 
     <h2>Children</h2>
     <p>The iPhone app is not directed at children under 13, and we don't knowingly collect personal information from children through the app. Because the iPhone app doesn't send your data to us, we don't receive app data from any user, including children. If you believe a child has sent us information by email, contact us and we'll delete it.</p>
