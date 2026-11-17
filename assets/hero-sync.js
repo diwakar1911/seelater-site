@@ -1,12 +1,17 @@
-/* Play the Before/After phone videos together only once #before-after
-   is in view. First entry restarts from 0; leaving pauses; returning
-   resumes in sync. No autoplay before that.
+/* Before/After phone videos.
 
-   Load with preload=metadata until the section is visible, then bump
-   to auto and stream the files directly (GitHub Pages supports Range).
-   Do not blob-fetch the full files on page load — that was stalling
-   playback on slow links. Retry play() on stall and resync after a
-   buffer if the two clocks drift. */
+   iPhone Safari does not load video data until play() is called, no
+   matter what preload says. So: as soon as #before-after is on screen,
+   call play() on both videos right away. Never wait for readyState,
+   never pause/seek both to fix drift (seeks stutter on iOS). Small drift
+   is corrected by nudging playbackRate; only a large gap (one video
+   stalled for a while) gets a single seek, at most every few seconds.
+
+   Both files are exactly 40.000 s / 1200 frames and use native loop, so
+   they stay aligned across loops without a seek-to-0 gap.
+
+   If play() is refused (iPhone Low Power Mode blocks autoplay), the
+   poster stays up and a play button appears; one tap starts both. */
 (function () {
   "use strict";
 
@@ -15,388 +20,301 @@
   );
   if (videos.length < 2) return;
 
+  var device = videos[0].closest(".hero-device");
   var section = document.getElementById("before-after") ||
     (videos[0] && videos[0].closest(".compare-demo, section"));
 
-  var ready = false;
-  var cycling = false;
-  var startedAt = 0;
-  var hasPlayed = false;
+  var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  var THRESHOLD = 0.3;
+  var SOFT = 0.08;        /* below this: no correction */
+  var HARD = 1.5;         /* above this: one seek on the leader */
+  var NUDGE = 0.06;       /* playbackRate offset while catching up */
+  var HARD_COOLDOWN = 4000;
+
   var visible = false;
+  var hasPlayed = false;
+  var startedAt = 0;
   var userPaused = false;
   var scrubbing = false;
+  var blocked = false;
   var loops = [];
-  var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
-  var THRESHOLD = 0.45;
-  var DRIFT = 0.12;
+  var lastT = videos.map(function () { return 0; });
+  var lastHard = 0;
   var watchId = 0;
-  var waiting = videos.map(function () { return false; });
-  var reloaded = videos.map(function () { return false; });
-  var resyncing = false;
+  var tapBtn = null;
+  var held = null;
+  var heldAt = 0;
 
-  function prefersReduced() {
-    return reducedMq.matches;
-  }
+  function prefersReduced() { return reducedMq.matches; }
 
   function prepare(v) {
-    v.loop = false;
-    v.removeAttribute("loop");
     v.muted = true;
     v.defaultMuted = true;
+    v.setAttribute("muted", "");
     v.playsInline = true;
     v.setAttribute("playsinline", "");
     v.setAttribute("webkit-playsinline", "");
-    v.setAttribute("muted", "");
-    v.removeAttribute("autoplay");
+    v.loop = true;
+    v.setAttribute("loop", "");
+    /* JS decides when to start (only once the section is on screen). */
     v.autoplay = false;
-    /* Keep metadata-only until the section is on screen. */
-    v.preload = "metadata";
-    try { v.pause(); } catch (e) {}
+    v.removeAttribute("autoplay");
+    if (v.preload !== "auto") v.preload = "auto";
+    if (!visible) { try { v.pause(); } catch (e) {} }
   }
-
   videos.forEach(prepare);
 
-  function bumpPreload() {
+  function duration() {
+    var d = videos.map(function (v) { return v.duration; }).filter(function (x) {
+      return x && isFinite(x) && x > 0;
+    });
+    return d.length ? Math.min.apply(null, d) : 40;
+  }
+
+  function currentTime() { return videos[0].currentTime || 0; }
+
+  /* ---- tap-to-play fallback (Low Power Mode, data saver) ---- */
+  function ensureTapButton() {
+    if (tapBtn || !device) return tapBtn;
+    tapBtn = document.createElement("button");
+    tapBtn.type = "button";
+    tapBtn.className = "hero-tap-play";
+    tapBtn.setAttribute("aria-label", "Play both videos");
+    tapBtn.innerHTML =
+      '<svg viewBox="0 0 20 20" width="22" height="22" aria-hidden="true">' +
+      '<path fill="currentColor" d="M6.4 3.8v12.4L16.2 10 6.4 3.8Z"/></svg>' +
+      '<span>Play</span>';
+    tapBtn.hidden = true;
+    tapBtn.addEventListener("click", function () {
+      userPlay();
+    });
+    device.appendChild(tapBtn);
+    return tapBtn;
+  }
+
+  function showTap(on) {
+    var b = ensureTapButton();
+    if (b) b.hidden = !on;
+  }
+
+  /* ---- playback ---- */
+  function resetRates() {
     videos.forEach(function (v) {
-      if (v.preload !== "auto") v.preload = "auto";
+      if (v.playbackRate !== 1) v.playbackRate = 1;
     });
   }
 
-  function whenSeeked(v) {
-    return new Promise(function (resolve) {
-      var done = false;
-      function finish() {
-        if (done) return;
-        done = true;
-        v.removeEventListener("seeked", finish);
-        clearTimeout(tid);
-        resolve();
-      }
-      v.addEventListener("seeked", finish);
-      var tid = setTimeout(finish, 1200);
-    });
-  }
-
-  function seekToZero() {
-    return Promise.all(
-      videos.map(function (v) {
-        try { v.pause(); } catch (e) {}
-        var p = whenSeeked(v);
-        try { v.currentTime = 0; } catch (e) {}
-        if (v.currentTime === 0 && v.readyState >= 2) {
-          /* already at 0; seeked may not fire */
-          return Promise.resolve();
-        }
-        return p;
-      })
-    );
-  }
-
-  function playOne(v, force, attempt) {
-    if (scrubbing || resyncing) return Promise.resolve();
-    if (!force && (userPaused || !visible)) return Promise.resolve();
-    if (!force && prefersReduced()) return Promise.resolve();
-    if (v.seeking) return Promise.resolve();
+  function playOne(v) {
+    v.muted = true;
     var p;
-    try { p = v.play(); } catch (e) { return retryPlay(v, force, attempt, e); }
-    if (!p || !p.then) return Promise.resolve(p);
-    return p.catch(function (err) { return retryPlay(v, force, attempt, err); });
-  }
-
-  function retryPlay(v, force, attempt, err) {
-    var name = err && err.name;
-    if (name === "NotAllowedError" || name === "AbortError") return Promise.resolve();
-    if ((attempt || 0) >= 6) return Promise.resolve();
-    return new Promise(function (resolve) {
-      setTimeout(function () {
-        resolve(playOne(v, force, (attempt || 0) + 1));
-      }, 250 * Math.pow(1.4, attempt || 0));
+    try { p = v.play(); } catch (e) { return Promise.resolve(false); }
+    if (!p || !p.then) return Promise.resolve(true);
+    return p.then(function () { return true; }, function (err) {
+      if (err && err.name === "NotAllowedError") {
+        blocked = true;
+        showTap(true);
+      }
+      return false;
     });
   }
 
-  function playBoth(force) {
-    return Promise.all(videos.map(function (v) { return playOne(v, force, 0); }));
+  /* play() must be called synchronously here so a tap counts as a
+     user gesture on iOS. */
+  function playBoth() {
+    var ps = videos.map(playOne);
+    return Promise.all(ps).then(function (ok) {
+      if (ok.every(Boolean)) {
+        blocked = false;
+        showTap(false);
+      }
+      return ok;
+    });
   }
 
   function pauseBoth() {
+    held = null;
     videos.forEach(function (v) {
       try { v.pause(); } catch (e) {}
     });
+    resetRates();
   }
 
-  function waitForData(v, minState, ms) {
-    if (v.readyState >= minState) return Promise.resolve();
-    return new Promise(function (resolve) {
-      var done = false;
-      function finish() {
-        if (done) return;
-        if (v.readyState < minState && Date.now() < until) return;
-        done = true;
-        ["loadeddata", "canplay", "canplaythrough", "error", "progress"].forEach(function (ev) {
-          v.removeEventListener(ev, finish);
-        });
-        clearTimeout(tid);
-        resolve();
-      }
-      var until = Date.now() + (ms || 8000);
-      ["loadeddata", "canplay", "canplaythrough", "error", "progress"].forEach(function (ev) {
-        v.addEventListener(ev, finish);
-      });
-      var tid = setTimeout(finish, ms || 8000);
-    });
+  function shouldRun() {
+    return visible && !userPaused && !scrubbing && !prefersReduced();
   }
 
-  function startTogether() {
-    if (ready || hasPlayed || userPaused || scrubbing) return;
-    if (prefersReduced() || !visible) return;
-    ready = true;
-    bumpPreload();
-    Promise.all(videos.map(function (v) { return waitForData(v, 2, 10000); }))
-      .then(function () {
-        if (!visible || prefersReduced()) {
-          ready = false;
-          return;
-        }
-        return seekToZero();
-      })
-      .then(function () {
-        if (!visible || prefersReduced()) {
-          ready = false;
-          return;
-        }
-        hasPlayed = true;
-        startedAt = performance.now();
-        startWatch();
-        return playBoth();
-      })
-      .catch(function () {
-        ready = false;
-      });
+  function start() {
+    if (!shouldRun()) return;
+    if (!hasPlayed) {
+      hasPlayed = true;
+      startedAt = performance.now();
+    }
+    startWatch();
+    playBoth();
   }
 
-  function restartTogether(reason) {
-    if (!ready || cycling || !visible || prefersReduced() || userPaused || scrubbing) return;
-    cycling = true;
-    var wall = performance.now();
-    var before = videos.map(function (v) {
-      return { t: v.currentTime, dur: v.duration, paused: v.paused };
-    });
-    seekToZero()
-      .then(function () {
-        if (!visible || prefersReduced()) {
-          cycling = false;
-          return;
-        }
-        var afterSeek = videos.map(function (v) { return v.currentTime; });
-        return playBoth().then(function () {
-          loops.push({
-            reason: reason,
-            wall: wall,
-            driftMs: before.length > 1 ? Math.abs(before[0].t - before[1].t) * 1000 : 0,
-            before: before,
-            afterSeek: afterSeek,
-            t0: videos[0].currentTime,
-            t1: videos[1].currentTime
-          });
-        });
-      })
-      .then(function () {
-        cycling = false;
-      });
+  /* ---- soft sync ---- */
+  function wrapDiff(a, b, dur) {
+    var d = a - b;
+    if (d > dur / 2) d -= dur;
+    else if (d < -dur / 2) d += dur;
+    return d;
   }
 
-  function bufferedAround(v, t) {
-    try {
-      var b = v.buffered;
-      for (var i = 0; i < b.length; i++) {
-        if (b.start(i) <= t + 0.05 && b.end(i) >= t + 0.25) return true;
-      }
-    } catch (e) {}
-    return false;
-  }
-
-  function pickResyncTime(t0, t1) {
-    var lead = Math.max(t0, t1);
-    var lag = Math.min(t0, t1);
-    var bothLead = videos.every(function (v) { return bufferedAround(v, lead); });
-    if (bothLead) return lead;
-    var bothLag = videos.every(function (v) { return bufferedAround(v, lag); });
-    if (bothLag) return lag;
-    /* Prefer the time the lagging clip can actually play. */
-    return lag;
-  }
-
-  function resyncIfDrifted() {
-    if (!ready || cycling || resyncing || !visible || prefersReduced() || userPaused || scrubbing) return;
-    if (videos.length < 2) return;
-    if (videos.some(function (v) { return v.seeking; })) return;
-    var t0 = videos[0].currentTime || 0;
-    var t1 = videos[1].currentTime || 0;
-    if (Math.abs(t0 - t1) < DRIFT) return;
+  function syncTick() {
+    if (!shouldRun()) return;
     var dur = duration();
-    var max = dur > 0.08 ? dur - 0.05 : dur;
-    var t = Math.max(0, Math.min(max, pickResyncTime(t0, t1)));
-    resyncing = true;
-    Promise.all(
-      videos.map(function (v) {
-        try { v.pause(); } catch (e) {}
-        if (Math.abs((v.currentTime || 0) - t) < 0.04) return Promise.resolve();
-        var p = whenSeeked(v);
-        try { v.currentTime = t; } catch (e) { return Promise.resolve(); }
-        return p;
-      })
-    ).then(function () {
-      resyncing = false;
-      if (!visible || prefersReduced() || userPaused || scrubbing) return;
-      return playBoth();
-    }).catch(function () {
-      resyncing = false;
+
+    /* Loop bookkeeping (native loop wraps currentTime back to ~0). */
+    videos.forEach(function (v, i) {
+      var t = v.currentTime || 0;
+      if (t + 1 < lastT[i]) {
+        loops.push({ i: i, wall: performance.now(), from: lastT[i], to: t });
+        if (loops.length > 50) loops.shift();
+      }
+      lastT[i] = t;
     });
+
+    var a = videos[0], b = videos[1];
+    var now = performance.now();
+
+    /* Hold: if one video is still buffering, pause the one that is
+       ahead until the other catches up. Pausing is cheap; seeking is
+       what stutters on iOS. */
+    if (held) {
+      var other = held === a ? b : a;
+      var gap = wrapDiff(held.currentTime, other.currentTime, dur);
+      if ((other.readyState >= 3 && !other.paused && gap <= SOFT) ||
+          now - heldAt > 6000) {
+        var h = held;
+        held = null;
+        playOne(h);
+      } else if (other.paused && !blocked) {
+        playOne(other);
+      }
+      if (held) return;
+    }
+
+    /* Keep trying if something paused us without asking (iOS can do
+       this after a stall or when the tab comes back). */
+    var paused = videos.filter(function (v) { return v.paused; });
+    if (paused.length && !blocked) {
+      paused.forEach(playOne);
+      return;
+    }
+
+    var d = wrapDiff(a.currentTime, b.currentTime, dur); /* >0: a leads */
+    var ad = Math.abs(d);
+    var leader = d > 0 ? a : b;
+    var lagger = d > 0 ? b : a;
+
+    if (lagger.readyState < 3 || lagger.seeking) {
+      if (ad > SOFT && leader.readyState >= 3) {
+        held = leader;
+        heldAt = now;
+        resetRates();
+        try { leader.pause(); } catch (e) {}
+      }
+      return;
+    }
+    if (leader.readyState < 3 || leader.seeking) {
+      resetRates();
+      return;
+    }
+    if (ad < SOFT) {
+      resetRates();
+      return;
+    }
+    if (ad > HARD && now - lastHard > HARD_COOLDOWN) {
+      lastHard = now;
+      resetRates();
+      /* Move only the leader back to where the lagger is; the lagger
+         keeps its buffer and keeps playing. */
+      try { leader.currentTime = lagger.currentTime; } catch (e) {}
+      return;
+    }
+    var n = ad > 0.4 ? NUDGE * 2 : NUDGE;
+    leader.playbackRate = 1 - n;
+    lagger.playbackRate = 1 + n;
   }
 
   function startWatch() {
     if (watchId) return;
-    watchId = setInterval(function () {
-      if (!visible || !hasPlayed || userPaused || scrubbing || prefersReduced() || cycling || resyncing) return;
-      videos.forEach(function (v) {
-        if (v.paused && !v.ended && !v.seeking) playOne(v, false, 0);
-      });
-      resyncIfDrifted();
-    }, 400);
+    watchId = setInterval(syncTick, 250);
   }
 
   function stopWatch() {
-    if (watchId) {
-      clearInterval(watchId);
-      watchId = 0;
-    }
+    if (watchId) { clearInterval(watchId); watchId = 0; }
+  }
+
+  /* ---- visibility ---- */
+  function announce(active) {
+    window.__heroesActive = active;
+    try {
+      window.dispatchEvent(new CustomEvent("seelater:heroes", { detail: { active: active } }));
+    } catch (e) {}
   }
 
   function onVisibility(isVisible) {
+    if (isVisible === visible) return;
     visible = isVisible;
-    if (prefersReduced() || userPaused || scrubbing) {
-      if (!isVisible) {
-        pauseBoth();
-        stopWatch();
-      } else if (prefersReduced() && !userPaused && !scrubbing) pauseBoth();
-      return;
-    }
-    if (isVisible) {
-      bumpPreload();
-      if (!hasPlayed) {
-        startTogether();
-      } else {
-        startWatch();
-        playBoth();
-      }
-    } else {
-      pauseBoth();
-      stopWatch();
-    }
+    announce(isVisible);
+    if (isVisible) start();
+    else { stopWatch(); pauseBoth(); }
   }
-
-  videos.forEach(function (v, i) {
-    v.addEventListener("ended", function () { restartTogether("ended"); });
-    v.addEventListener("timeupdate", function () {
-      if (!ready || cycling || !visible || prefersReduced() || userPaused || scrubbing) return;
-      var dur = v.duration;
-      if (dur && isFinite(dur) && dur > 0 && v.currentTime >= dur - 0.04) {
-        restartTogether("timeupdate");
-      }
-    });
-    v.addEventListener("canplaythrough", function () {
-      if (visible && !hasPlayed) startTogether();
-    });
-    v.addEventListener("loadeddata", function () {
-      if (visible && !hasPlayed) startTogether();
-    });
-    v.addEventListener("canplay", function () {
-      if (visible && !hasPlayed) startTogether();
-      if (waiting[i] && hasPlayed && visible && !userPaused && !scrubbing) {
-        waiting[i] = false;
-        playOne(v, false, 0);
-        resyncIfDrifted();
-      }
-    });
-    v.addEventListener("waiting", function () { waiting[i] = true; });
-    v.addEventListener("stalled", function () {
-      waiting[i] = true;
-      if (hasPlayed && visible && !userPaused && !scrubbing) playOne(v, false, 0);
-    });
-    v.addEventListener("playing", function () {
-      if (waiting[i]) {
-        waiting[i] = false;
-        resyncIfDrifted();
-      }
-    });
-    v.addEventListener("error", function () {
-      if (reloaded[i]) return;
-      reloaded[i] = true;
-      var src = v.getAttribute("src") || v.currentSrc;
-      if (!src || src.indexOf("blob:") === 0) return;
-      try {
-        v.src = src;
-        v.load();
-      } catch (e) {}
-      if (visible && hasPlayed && !userPaused && !scrubbing) {
-        setTimeout(function () { playOne(v, false, 0); }, 400);
-      }
-    });
-  });
 
   if (section && "IntersectionObserver" in window) {
-    var io = new IntersectionObserver(
-      function (entries) {
-        var entry = entries[0];
-        var ratio = entry && entry.isIntersecting ? entry.intersectionRatio : 0;
-        onVisibility(ratio >= THRESHOLD);
-      },
-      { threshold: [0, 0.25, 0.4, 0.45, 0.5, 0.75, 1] }
-    );
+    var io = new IntersectionObserver(function (entries) {
+      var e = entries[entries.length - 1];
+      var r = e && e.isIntersecting ? e.intersectionRatio : 0;
+      /* Tall section on a short screen: count it as visible once most of
+         the viewport is covered by it. */
+      var rb = e && e.rootBounds;
+      var cover = rb && rb.height ? e.intersectionRect.height / rb.height : 0;
+      onVisibility(r >= THRESHOLD || cover >= 0.6);
+    }, { threshold: [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.75, 1] });
     io.observe(section);
-  } else if (section) {
-    /* Rare fallback: treat as visible only when already in view on load. */
-    var rect = section.getBoundingClientRect();
-    var vh = window.innerHeight || 0;
-    var visiblePx = Math.min(rect.bottom, vh) - Math.max(rect.top, 0);
-    onVisibility(vh > 0 && visiblePx / Math.max(rect.height, 1) >= THRESHOLD);
+  } else {
+    visible = true;
+    start();
   }
+
+  document.addEventListener("visibilitychange", function () {
+    if (document.hidden) { stopWatch(); pauseBoth(); }
+    else if (visible) start();
+  });
 
   if (reducedMq.addEventListener) {
     reducedMq.addEventListener("change", function () {
-      if (prefersReduced()) {
-        pauseBoth();
-        stopWatch();
-      } else if (visible && !userPaused && !scrubbing) {
-        if (!hasPlayed) startTogether();
-        else {
-          startWatch();
-          playBoth();
-        }
-      }
+      if (prefersReduced()) { stopWatch(); pauseBoth(); }
+      else start();
     });
   }
 
-  function duration() {
-    var durs = videos.map(function (v) { return v.duration; }).filter(function (d) {
-      return d && isFinite(d) && d > 0;
+  videos.forEach(function (v) {
+    /* One reload attempt on a network error. */
+    var reloaded = false;
+    v.addEventListener("error", function () {
+      if (reloaded) return;
+      reloaded = true;
+      var src = v.getAttribute("src");
+      if (!src) return;
+      try { v.src = src; v.load(); } catch (e) {}
+      if (shouldRun()) setTimeout(function () { playOne(v); }, 300);
     });
-    if (!durs.length) return 40;
-    return Math.min.apply(null, durs);
-  }
+  });
 
-  function currentTime() {
-    return videos[0] ? videos[0].currentTime || 0 : 0;
-  }
-
+  /* ---- API used by loop-scrub.js ---- */
   function seekBoth(t) {
     hasPlayed = true;
-    ready = true;
     var dur = duration();
     var max = dur > 0.08 ? dur - 0.05 : dur;
     t = Math.max(0, Math.min(max, t));
-    videos.forEach(function (v) {
+    held = null;
+    resetRates();
+    videos.forEach(function (v, i) {
       try { v.currentTime = t; } catch (e) {}
+      lastT[i] = t;
     });
     if (window.__hopStory) {
       if (typeof window.__hopStory.follow === "function") window.__hopStory.follow();
@@ -408,9 +326,10 @@
   function userPlay() {
     userPaused = false;
     hasPlayed = true;
-    ready = true;
+    blocked = false;
+    if (!startedAt) startedAt = performance.now();
     startWatch();
-    return playBoth(true);
+    return playBoth();
   }
 
   function userPause() {
@@ -421,12 +340,8 @@
 
   function setScrubbing(on) {
     scrubbing = !!on;
-    if (scrubbing) {
-      stopWatch();
-      pauseBoth();
-    } else if (visible && hasPlayed && !userPaused && !prefersReduced()) {
-      startWatch();
-    }
+    if (scrubbing) { stopWatch(); pauseBoth(); }
+    else if (shouldRun() && hasPlayed) startWatch();
   }
 
   window.__heroSync = {
@@ -449,25 +364,22 @@
     },
     snapshot: function () {
       return {
-        ready: ready,
-        cycling: cycling,
-        startedAt: startedAt,
         hasPlayed: hasPlayed,
         visible: visible,
+        blocked: blocked,
         reduced: prefersReduced(),
+        startedAt: startedAt,
         loopCount: loops.length,
         loops: loops,
         now: performance.now(),
-        state: videos.map(function (v, i) {
+        state: videos.map(function (v) {
           return {
             t: v.currentTime,
             dur: v.duration,
+            rate: v.playbackRate,
             paused: v.paused,
-            ended: v.ended,
             ready: v.readyState,
             loop: v.loop,
-            autoplay: v.autoplay,
-            waiting: !!waiting[i],
             network: v.networkState
           };
         })

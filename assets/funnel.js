@@ -196,6 +196,7 @@
   const SLIDE = 520;
   const EASE = "cubic-bezier(0.32, 0.72, 0, 1)";
   const reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
+  const coarseMq = window.matchMedia("(pointer: coarse)");
 
   let running = false;
   let timer = 0;
@@ -258,8 +259,15 @@
 
   let liveIndex = 0;
 
+  /* On phones, let the Before/After heroes have the video decoder and
+     the network while they are on screen (hero-sync.js sets this). */
+  function heroesHaveFocus() {
+    return !!window.__heroesActive && coarseMq.matches;
+  }
+
   function tryPlay(v, attempt) {
     muteInline(v);
+    if (heroesHaveFocus()) { try { v.pause(); } catch (e) {} return; }
     v.preload = "auto";
     let p;
     try { p = v.play(); } catch (e) { p = Promise.reject(e); }
@@ -509,6 +517,15 @@
       v.preload = "metadata";
     });
   }
+
+  window.addEventListener("seelater:heroes", function () {
+    if (heroesHaveFocus()) {
+      const cur = pages[liveIndex] && pages[liveIndex].querySelector("video");
+      if (cur) { try { cur.pause(); } catch (e) {} }
+    } else if (running && onScreen) {
+      playFor(liveIndex);
+    }
+  });
 
   // Start when the section is on screen. Leaving it pauses clips so they
   // stop competing for bandwidth, but does not reset the loop.

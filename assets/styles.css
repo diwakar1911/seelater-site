@@ -3154,3 +3154,29 @@ h3 { line-height: 1.2; }
     display: none;
   }
 }
+
+
+/* Tap-to-play fallback when the browser refuses autoplay
+   (iPhone Low Power Mode). Hidden unless hero-sync.js shows it. */
+.hero-tap-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 5;
+  transform: translate(-50%, -50%);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(10, 13, 14, 0.82);
+  color: #fff;
+  font: 600 16px/1 inherit;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.25);
+}
+.hero-tap-play[hidden] { display: none; }
