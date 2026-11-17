@@ -1,3 +1,39 @@
+SeeLater phone-demo clips (updated 16 Nov 2026, America/Los_Angeles).
+The three in-app clips (tt / reels / shorts) and both current hero
+demos (media/demo_problem_v5.mp4 and media/demo_after_v3.mp4) use
+TikToks Diwakar chose. He accepted the copyright risk on 16 Nov 2026.
+These are not Pexels-licensed. Do not imply that the creators, the
+animals' owners, or anyone on screen endorses SeeLater. A person's
+hand and gold watch are visible in the Pomeranian clip.
+
+Slot order (kitten is second so it matches the iMessage line
+"this cat is literally you"):
+
+  tt.mp4 / tt.jpg / tt-card.jpg
+    TikTok @dogcat_0327, bunny and a duckling with strawberries, 10 s,
+    328.6M views. https://www.tiktok.com/t/ZPN19s3Rw/
+    Trim 4.00–8.80 s (4.80 s), already 9:16, scaled to 1080x1920.
+
+  reels.mp4 / reels.jpg / reels-card.jpg
+    TikTok @_971218, "it's her first modeling job...", 10.7 s, 2.4M views.
+    https://www.tiktok.com/t/ZTPP1ndHo/
+    Trim 5.88–10.68 s (4.80 s). Source is 720x960 (3:4); cropped 9:16
+    (crop=540:960:90:0) and scaled to 1080x1920.
+
+  shorts.mp4 / shorts.jpg / shorts-card.jpg
+    TikTok @coco.thefluffypom, Pomeranian "Summering", 12.9 s, 1.1M views.
+    https://www.tiktok.com/t/ZTPfoWYdV/
+    Trim 7.70–12.50 s (4.80 s), already 9:16. A person's hand holding
+    the cup is visible; do not imply endorsement.
+
+The Pexels cat-clip credits below described the previous live-site files
+and no longer apply to the current tt / reels / shorts clips or to
+demo_problem_v5.mp4 and demo_after_v3.mp4. Historical demo_problem_v4
+and earlier After demos in this folder were not recaptured.
+
+--- original licence file follows ---
+
+
 SeeLater problem-demo stock clips
 All video clips below are used under the Pexels License
 (https://www.pexels.com/license/): free to use for commercial and
@@ -38,26 +74,8 @@ App Switcher background in media/demo_problem_v5.mp4:
   The previous night-sky mountain still (Pexels, archived as
   assets/img/wall-night.jpg) is no longer used in the live demo.
 
-Third-party brand icons in assets/img/brand/
---------------------------------------------
-Official, unaltered icons used only as nominative source labels on the
-preview landing-page funnel graphic. See assets/img/brand/README.md for
-the exact official download URL and filename of each file.
+media/demo_after_v1.mp4 uses the same lock-screen wallpaper and the same three Pexels cat clips (tt.mp4, reels.mp4, shorts.mp4), credited above, plus the same Pexels 1239291 portrait of the iMessage contact.
 
-  TikTok   Official Logo Pack linked from
-           https://developers.tiktok.com/doc/getting-started-design-guidelines/
-           (logo-pack.zip, TikTok_Icon_Black_Square.png). Retrieved 15 Nov 2026.
+media/demo_after_v2.mp4 is the same recording as demo_after_v1.mp4, held on the closing Messages reply for three more seconds so it matches the 40.00 s / 1200-frame length of media/demo_problem_v5.mp4.
 
-  Instagram Official glyph SVGs from Meta Brand Resource Center
-           https://www.meta.com/brand/resources/instagram/instagram-brand/
-           (IG_brand_asset_pack_2023.zip). Retrieved 15 Nov 2026.
-
-  YouTube  Official product logo SVG from YouTube Brand Resources /
-           Google product logos
-           https://www.youtube.com/howyoutubeworks/resources/brand-resources/
-           https://www.gstatic.com/images/branding/productlogos/youtube/v9/192px.svg
-           Retrieved 15 Nov 2026. Used to label YouTube Shorts; a separate
-           official Shorts mark was not published for download on that date.
-
-TikTok, Instagram and YouTube are trademarks of their respective owners.
-SeeLater is not affiliated with them.
+media/demo_after_v3.mp4 uses the same lock-screen wallpaper, the same three Pexels cat clips, and the same Pexels 1239291 portrait as the earlier After demos. The home-screen SeeLater icon is the official app icon, masked to an iOS squircle. No Shortcut or SeeLater save notification is shown; the setup guide’s optional quiet-Shortcuts steps leave those alerts off.

@@ -1,6 +1,15 @@
-Stock clips (Pexels License, free for commercial use):
-  tt.mp4      Pexels 6869665  — cottonbro studio, white cat at a table
-  reels.mp4   Pexels 12109326 — Anna Bondarenko, kittens playing
-  shorts.mp4  Pexels 854413   — black cat close-up (Pexels / Pixabay collection)
-Portrait still: Pexels 1239291
-Full licence notes: ../../media/LICENSES.txt
+Phone-demo clips for the landing page (16 Nov 2026).
+Diwakar picked these three TikToks and accepted the copyright
+risk on 16 Nov 2026. Slot order is bunny, then the flower-collar
+kitten (so it matches "this cat is literally you"), then the puppy.
+
+  tt.mp4      TikTok @dogcat_0327  — bunny and duckling with strawberries
+              https://www.tiktok.com/t/ZPN19s3Rw/  (328.6M views)
+  reels.mp4   TikTok @_971218 — kitten in a flower collar ("it's her first modeling job...")
+              https://www.tiktok.com/t/ZTPP1ndHo/  (2.4M views)
+  shorts.mp4  TikTok @coco.thefluffypom — Pomeranian ("Summering")
+              https://www.tiktok.com/t/ZTPfoWYdV/  (1.1M views)
+
+These are copyrighted viral videos, not Pexels/CC0 stock. Do not
+imply the creators endorse SeeLater. Full notes: ../../media/LICENSES.txt
+and /workspace/seelater/clips_v2/SOURCES.txt.
