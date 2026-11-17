@@ -1,6 +1,12 @@
 /* Play the Before/After phone videos together only once #before-after
    is in view. First entry restarts from 0; leaving pauses; returning
-   resumes in sync. No autoplay before that. */
+   resumes in sync. No autoplay before that.
+
+   Load with preload=metadata until the section is visible, then bump
+   to auto and stream the files directly (GitHub Pages supports Range).
+   Do not blob-fetch the full files on page load — that was stalling
+   playback on slow links. Retry play() on stall and resync after a
+   buffer if the two clocks drift. */
 (function () {
   "use strict";
 
@@ -22,6 +28,11 @@
   var loops = [];
   var reducedMq = window.matchMedia("(prefers-reduced-motion: reduce)");
   var THRESHOLD = 0.45;
+  var DRIFT = 0.12;
+  var watchId = 0;
+  var waiting = videos.map(function () { return false; });
+  var reloaded = videos.map(function () { return false; });
+  var resyncing = false;
 
   function prefersReduced() {
     return reducedMq.matches;
@@ -38,11 +49,18 @@
     v.setAttribute("muted", "");
     v.removeAttribute("autoplay");
     v.autoplay = false;
-    v.preload = "auto";
+    /* Keep metadata-only until the section is on screen. */
+    v.preload = "metadata";
     try { v.pause(); } catch (e) {}
   }
 
   videos.forEach(prepare);
+
+  function bumpPreload() {
+    videos.forEach(function (v) {
+      if (v.preload !== "auto") v.preload = "auto";
+    });
+  }
 
   function whenSeeked(v) {
     return new Promise(function (resolve) {
@@ -51,10 +69,11 @@
         if (done) return;
         done = true;
         v.removeEventListener("seeked", finish);
+        clearTimeout(tid);
         resolve();
       }
       v.addEventListener("seeked", finish);
-      setTimeout(finish, 250);
+      var tid = setTimeout(finish, 1200);
     });
   }
 
@@ -73,16 +92,30 @@
     );
   }
 
-  function playBoth(force) {
-    if (scrubbing) return Promise.resolve();
+  function playOne(v, force, attempt) {
+    if (scrubbing || resyncing) return Promise.resolve();
     if (!force && (userPaused || !visible)) return Promise.resolve();
     if (!force && prefersReduced()) return Promise.resolve();
-    return Promise.all(
-      videos.map(function (v) {
-        var play = v.play();
-        return play && play.catch ? play.catch(function () {}) : play;
-      })
-    );
+    if (v.seeking) return Promise.resolve();
+    var p;
+    try { p = v.play(); } catch (e) { return retryPlay(v, force, attempt, e); }
+    if (!p || !p.then) return Promise.resolve(p);
+    return p.catch(function (err) { return retryPlay(v, force, attempt, err); });
+  }
+
+  function retryPlay(v, force, attempt, err) {
+    var name = err && err.name;
+    if (name === "NotAllowedError" || name === "AbortError") return Promise.resolve();
+    if ((attempt || 0) >= 6) return Promise.resolve();
+    return new Promise(function (resolve) {
+      setTimeout(function () {
+        resolve(playOne(v, force, (attempt || 0) + 1));
+      }, 250 * Math.pow(1.4, attempt || 0));
+    });
+  }
+
+  function playBoth(force) {
+    return Promise.all(videos.map(function (v) { return playOne(v, force, 0); }));
   }
 
   function pauseBoth() {
@@ -91,20 +124,54 @@
     });
   }
 
+  function waitForData(v, minState, ms) {
+    if (v.readyState >= minState) return Promise.resolve();
+    return new Promise(function (resolve) {
+      var done = false;
+      function finish() {
+        if (done) return;
+        if (v.readyState < minState && Date.now() < until) return;
+        done = true;
+        ["loadeddata", "canplay", "canplaythrough", "error", "progress"].forEach(function (ev) {
+          v.removeEventListener(ev, finish);
+        });
+        clearTimeout(tid);
+        resolve();
+      }
+      var until = Date.now() + (ms || 8000);
+      ["loadeddata", "canplay", "canplaythrough", "error", "progress"].forEach(function (ev) {
+        v.addEventListener(ev, finish);
+      });
+      var tid = setTimeout(finish, ms || 8000);
+    });
+  }
+
   function startTogether() {
     if (ready || hasPlayed || userPaused || scrubbing) return;
     if (prefersReduced() || !visible) return;
-    if (!videos.every(function (v) { return v.readyState >= 3; })) return;
     ready = true;
-    seekToZero().then(function () {
-      if (!visible || prefersReduced()) {
+    bumpPreload();
+    Promise.all(videos.map(function (v) { return waitForData(v, 2, 10000); }))
+      .then(function () {
+        if (!visible || prefersReduced()) {
+          ready = false;
+          return;
+        }
+        return seekToZero();
+      })
+      .then(function () {
+        if (!visible || prefersReduced()) {
+          ready = false;
+          return;
+        }
+        hasPlayed = true;
+        startedAt = performance.now();
+        startWatch();
+        return playBoth();
+      })
+      .catch(function () {
         ready = false;
-        return;
-      }
-      hasPlayed = true;
-      startedAt = performance.now();
-      return playBoth();
-    });
+      });
   }
 
   function restartTogether(reason) {
@@ -138,25 +205,97 @@
       });
   }
 
+  function bufferedAround(v, t) {
+    try {
+      var b = v.buffered;
+      for (var i = 0; i < b.length; i++) {
+        if (b.start(i) <= t + 0.05 && b.end(i) >= t + 0.25) return true;
+      }
+    } catch (e) {}
+    return false;
+  }
+
+  function pickResyncTime(t0, t1) {
+    var lead = Math.max(t0, t1);
+    var lag = Math.min(t0, t1);
+    var bothLead = videos.every(function (v) { return bufferedAround(v, lead); });
+    if (bothLead) return lead;
+    var bothLag = videos.every(function (v) { return bufferedAround(v, lag); });
+    if (bothLag) return lag;
+    /* Prefer the time the lagging clip can actually play. */
+    return lag;
+  }
+
+  function resyncIfDrifted() {
+    if (!ready || cycling || resyncing || !visible || prefersReduced() || userPaused || scrubbing) return;
+    if (videos.length < 2) return;
+    if (videos.some(function (v) { return v.seeking; })) return;
+    var t0 = videos[0].currentTime || 0;
+    var t1 = videos[1].currentTime || 0;
+    if (Math.abs(t0 - t1) < DRIFT) return;
+    var dur = duration();
+    var max = dur > 0.08 ? dur - 0.05 : dur;
+    var t = Math.max(0, Math.min(max, pickResyncTime(t0, t1)));
+    resyncing = true;
+    Promise.all(
+      videos.map(function (v) {
+        try { v.pause(); } catch (e) {}
+        if (Math.abs((v.currentTime || 0) - t) < 0.04) return Promise.resolve();
+        var p = whenSeeked(v);
+        try { v.currentTime = t; } catch (e) { return Promise.resolve(); }
+        return p;
+      })
+    ).then(function () {
+      resyncing = false;
+      if (!visible || prefersReduced() || userPaused || scrubbing) return;
+      return playBoth();
+    }).catch(function () {
+      resyncing = false;
+    });
+  }
+
+  function startWatch() {
+    if (watchId) return;
+    watchId = setInterval(function () {
+      if (!visible || !hasPlayed || userPaused || scrubbing || prefersReduced() || cycling || resyncing) return;
+      videos.forEach(function (v) {
+        if (v.paused && !v.ended && !v.seeking) playOne(v, false, 0);
+      });
+      resyncIfDrifted();
+    }, 400);
+  }
+
+  function stopWatch() {
+    if (watchId) {
+      clearInterval(watchId);
+      watchId = 0;
+    }
+  }
+
   function onVisibility(isVisible) {
     visible = isVisible;
     if (prefersReduced() || userPaused || scrubbing) {
-      if (!isVisible) pauseBoth();
-      else if (prefersReduced() && !userPaused && !scrubbing) pauseBoth();
+      if (!isVisible) {
+        pauseBoth();
+        stopWatch();
+      } else if (prefersReduced() && !userPaused && !scrubbing) pauseBoth();
       return;
     }
     if (isVisible) {
+      bumpPreload();
       if (!hasPlayed) {
         startTogether();
       } else {
+        startWatch();
         playBoth();
       }
     } else {
       pauseBoth();
+      stopWatch();
     }
   }
 
-  videos.forEach(function (v) {
+  videos.forEach(function (v, i) {
     v.addEventListener("ended", function () { restartTogether("ended"); });
     v.addEventListener("timeupdate", function () {
       if (!ready || cycling || !visible || prefersReduced() || userPaused || scrubbing) return;
@@ -171,32 +310,38 @@
     v.addEventListener("loadeddata", function () {
       if (visible && !hasPlayed) startTogether();
     });
-  });
-
-  /* Load via blob so seek-to-0 works even when the server has no Range support. */
-  Promise.all(
-    videos.map(function (v) {
+    v.addEventListener("canplay", function () {
+      if (visible && !hasPlayed) startTogether();
+      if (waiting[i] && hasPlayed && visible && !userPaused && !scrubbing) {
+        waiting[i] = false;
+        playOne(v, false, 0);
+        resyncIfDrifted();
+      }
+    });
+    v.addEventListener("waiting", function () { waiting[i] = true; });
+    v.addEventListener("stalled", function () {
+      waiting[i] = true;
+      if (hasPlayed && visible && !userPaused && !scrubbing) playOne(v, false, 0);
+    });
+    v.addEventListener("playing", function () {
+      if (waiting[i]) {
+        waiting[i] = false;
+        resyncIfDrifted();
+      }
+    });
+    v.addEventListener("error", function () {
+      if (reloaded[i]) return;
+      reloaded[i] = true;
       var src = v.getAttribute("src") || v.currentSrc;
-      if (!src) return Promise.resolve();
-      return fetch(src)
-        .then(function (r) { return r.blob(); })
-        .then(function (blob) {
-          return new Promise(function (resolve) {
-            var url = URL.createObjectURL(blob);
-            function onReady() {
-              v.removeEventListener("canplaythrough", onReady);
-              resolve();
-            }
-            v.addEventListener("canplaythrough", onReady);
-            v.src = url;
-            v.load();
-            setTimeout(resolve, 8000);
-          });
-        })
-        .catch(function () {});
-    })
-  ).then(function () {
-    if (visible && !hasPlayed) startTogether();
+      if (!src || src.indexOf("blob:") === 0) return;
+      try {
+        v.src = src;
+        v.load();
+      } catch (e) {}
+      if (visible && hasPlayed && !userPaused && !scrubbing) {
+        setTimeout(function () { playOne(v, false, 0); }, 400);
+      }
+    });
   });
 
   if (section && "IntersectionObserver" in window) {
@@ -219,10 +364,15 @@
 
   if (reducedMq.addEventListener) {
     reducedMq.addEventListener("change", function () {
-      if (prefersReduced()) pauseBoth();
-      else if (visible && !userPaused && !scrubbing) {
+      if (prefersReduced()) {
+        pauseBoth();
+        stopWatch();
+      } else if (visible && !userPaused && !scrubbing) {
         if (!hasPlayed) startTogether();
-        else playBoth();
+        else {
+          startWatch();
+          playBoth();
+        }
       }
     });
   }
@@ -259,17 +409,24 @@
     userPaused = false;
     hasPlayed = true;
     ready = true;
+    startWatch();
     return playBoth(true);
   }
 
   function userPause() {
     userPaused = true;
+    stopWatch();
     pauseBoth();
   }
 
   function setScrubbing(on) {
     scrubbing = !!on;
-    if (scrubbing) pauseBoth();
+    if (scrubbing) {
+      stopWatch();
+      pauseBoth();
+    } else if (visible && hasPlayed && !userPaused && !prefersReduced()) {
+      startWatch();
+    }
   }
 
   window.__heroSync = {
@@ -301,7 +458,7 @@
         loopCount: loops.length,
         loops: loops,
         now: performance.now(),
-        state: videos.map(function (v) {
+        state: videos.map(function (v, i) {
           return {
             t: v.currentTime,
             dur: v.duration,
@@ -309,7 +466,9 @@
             ended: v.ended,
             ready: v.readyState,
             loop: v.loop,
-            autoplay: v.autoplay
+            autoplay: v.autoplay,
+            waiting: !!waiting[i],
+            network: v.networkState
           };
         })
       };

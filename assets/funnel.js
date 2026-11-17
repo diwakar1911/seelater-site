@@ -200,6 +200,7 @@
   let running = false;
   let timer = 0;
   let runId = 0;
+  let onScreen = false;
 
   function clearTimer() {
     if (timer) {
@@ -211,7 +212,17 @@
   function wait(ms) {
     return new Promise(function (resolve) {
       clearTimer();
-      timer = setTimeout(resolve, ms);
+      let remaining = ms;
+      let last = performance.now();
+      const tick = function () {
+        if (!running) { resolve(); return; }
+        const now = performance.now();
+        if (onScreen) remaining -= (now - last);
+        last = now;
+        if (remaining <= 0) { resolve(); return; }
+        timer = setTimeout(tick, onScreen ? Math.max(remaining, 16) : 200);
+      };
+      timer = setTimeout(tick, ms);
     });
   }
 
@@ -245,16 +256,34 @@
     v.playsInline = true;
   }
 
+  let liveIndex = 0;
+
+  function tryPlay(v, attempt) {
+    muteInline(v);
+    v.preload = "auto";
+    let p;
+    try { p = v.play(); } catch (e) { p = Promise.reject(e); }
+    if (p && p.catch) {
+      p.catch(function (err) {
+        const name = err && err.name;
+        if (name === "NotAllowedError" || name === "AbortError") return;
+        if (!running || !onScreen || (attempt || 0) >= 6) return;
+        setTimeout(function () { tryPlay(v, (attempt || 0) + 1); }, 250 * ((attempt || 0) + 1));
+      });
+    }
+  }
+
   function playFor(i) {
+    liveIndex = i;
     pages.forEach(function (page, pi) {
       const v = page.querySelector("video");
       if (!v) return;
       muteInline(v);
       // Only the centered card plays. Off-screen and incoming cards stay on a poster.
-      if (pi === i && running) {
-        const p = v.play();
-        if (p && p.catch) p.catch(function () {});
+      if (pi === i && running && onScreen) {
+        tryPlay(v, 0);
       } else {
+        v.preload = "metadata";
         pauseToPoster(v);
       }
     });
@@ -267,6 +296,23 @@
     muteInline(v);
     try { v.pause(); } catch (e) {}
   }
+
+  pages.forEach(function (page) {
+    const v = page.querySelector("video");
+    if (!v) return;
+    muteInline(v);
+    v.preload = "metadata";
+    v.addEventListener("stalled", function () {
+      if (!running) return;
+      const cur = pages[liveIndex] && pages[liveIndex].querySelector("video");
+      if (cur === v) tryPlay(v, 0);
+    });
+    v.addEventListener("canplay", function () {
+      if (!running) return;
+      const cur = pages[liveIndex] && pages[liveIndex].querySelector("video");
+      if (cur === v && v.paused) tryPlay(v, 0);
+    });
+  });
 
   let badgeRaf = 0;
 
@@ -455,21 +501,41 @@
     return;
   }
 
-  // Start when the section is on screen. Do not stop on intersection
-  // flicker — that was resetting the loop mid-play.
+  function pauseOffscreen() {
+    pages.forEach(function (page) {
+      const v = page.querySelector("video");
+      if (!v) return;
+      try { v.pause(); } catch (e) {}
+      v.preload = "metadata";
+    });
+  }
+
+  // Start when the section is on screen. Leaving it pauses clips so they
+  // stop competing for bandwidth, but does not reset the loop.
   if ("IntersectionObserver" in window) {
     const io = new IntersectionObserver(function (ents) {
       ents.forEach(function (e) {
-        if (e.isIntersecting) start();
+        if (e.isIntersecting) {
+          onScreen = true;
+          if (running) playFor(liveIndex);
+          else start();
+        } else {
+          onScreen = false;
+          pauseOffscreen();
+        }
       });
     }, { threshold: 0.2, rootMargin: "40px" });
     io.observe(root);
   } else {
+    onScreen = true;
     start();
   }
   requestAnimationFrame(function () {
     const r = root.getBoundingClientRect();
     const vh = window.innerHeight || document.documentElement.clientHeight || 0;
-    if (r.bottom > 40 && r.top < vh - 40) start();
+    if (r.bottom > 40 && r.top < vh - 40) {
+      onScreen = true;
+      start();
+    }
   });
 })();
